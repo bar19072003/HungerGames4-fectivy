@@ -65,8 +65,8 @@ class ProductController {
             return res.status(404).json({ error: 'Restaurant or Product not found' });
         }
 
-        // Get the user ID from the Authorization header (if present)
-        const userId = req.headers.authorization;
+        const userId = req.user.id; // Extract user ID from the authenticated request
+        
         // Execute background notification only if the user is authenticated
         if (userId) {
             (async () => {

@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const restaurantRoutes = require('./routes/restaurant.routes'); 
 const userRoutes = require('./routes/user.routes');
@@ -7,6 +8,8 @@ const tokenRoutes = require('./routes/token.routes');
 const orderRoutes = require('./routes/order.routes');
 const tcpClient = require('./client/tcpClient');
 
+
+app.use(cors());
 app.use(express.json());
 app.use('/api/users', userRoutes);
 app.use('/api/restaurants', restaurantRoutes);
