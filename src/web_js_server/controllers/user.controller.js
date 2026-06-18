@@ -12,7 +12,7 @@ class UserController {
      * @param {Object} res - Express response object.
      */
     createUser(req, res) {
-        const { username, password, name, phone, address } = req.body;
+        const { username, password, name, phone, address ,role } = req.body;
 
         // Check if username is already taken
         const existingUser = userService.getUserByUsername(username);
@@ -22,7 +22,7 @@ class UserController {
         
         try {
             // Create the new user using the service (validation handled by service)
-            const newUser = userService.createUser({ username, password, name, phone, address });
+            const newUser = userService.createUser({ username, password, name, phone, address, role });
             // Return 201 Created with Location header pointing to the new resource
             return res.status(201).location(`/api/users/${newUser.id}`).end();
         } catch (error) {
@@ -36,18 +36,15 @@ class UserController {
      * @param {Object} res - Express response object.
      */
     getUserById(req, res) {
-        const authHeader = req.headers.authorization;
+        const userIdFromToken = req.user.id;
+        const requestedUserId = req.params.id;
 
-        if (!authHeader){
-            return res.status(400).json({ error: "Missing authorization header" })
-        }
-        const userId = req.params.id;
-
-        if( userId !== authHeader) { //Will change when we start using JWT
+        // Ensure users can only fetch their own profile
+        if( requestedUserId !== userIdFromToken) { 
             return res.status(403).json({ error: "Forbidden: You can only access your own user data" });
         }
 
-        const user = userService.getUserById(userId);
+        const user = userService.getUserById(requestedUserId);
         
         if (!user) {
             return res.status(404).json({ error: "User not found" });

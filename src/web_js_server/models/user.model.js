@@ -31,7 +31,8 @@ class UserModel {
             password: userData.password,
             name: userData.name,
             phone: userData.phone,
-            address: userData.address
+            address: userData.address,
+            role: userData.role || 'user' // default role is 'user', can be overridden by service if needed
         };
 
         // Store the newly created user in our main in-memory Map

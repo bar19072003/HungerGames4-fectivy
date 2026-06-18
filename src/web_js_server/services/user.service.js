@@ -78,6 +78,11 @@ class UserService {
         }
         return user.id;
     }
+
+    getUserRole(userId) {
+        const user = this.getUserById(userId);
+        return user ? user.role : null;
+    }
 }
 
 module.exports = new UserService();
