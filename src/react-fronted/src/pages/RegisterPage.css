@@ -1,0 +1,95 @@
+/* Specific tweaks for the Register Page */
+
+.register-form-width {
+    width: 100%;
+    max-width: 450px; 
+}
+
+/* File inputs natively have an ugly gray button. This targets the internal button to style it */
+.register-file-input::file-selector-button {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 6px 12px;
+    margin-inline-end: 12px; /* Space between button and file name */
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.register-file-input::file-selector-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* =========================================
+   Avatar Upload Styling
+   ========================================= */
+
+/* The clickable label container */
+.avatar-upload-label {
+    display: inline-block;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 2px dashed rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+/* Hover effect to indicate it's clickable */
+.avatar-upload-label:hover {
+    border-color: #009de0;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* The actual uploaded image */
+.avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #ffffff; /* Solid blue border once uploaded */
+}
+
+/* The gray circle before an image is uploaded */
+.avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    position: relative;
+}
+
+/* The SVG user icon */
+.default-user-icon {
+    width: 60px;
+    height: 60px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* The small '+' button on the bottom right */
+.upload-badge {
+    position: absolute;
+    bottom: 0;
+    right: 5px;
+    background-color: #ffffff;
+    color: white;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    line-height: 1;
+    border: 3px solid #ffffff; /* Matches the dark background of the page to create a cutout effect */
+    transition: transform 0.2s ease;
+}
+
+.avatar-upload-label:hover .upload-badge {
+    transform: scale(1.1); /* Slightly enlarge the plus sign on hover */
+}

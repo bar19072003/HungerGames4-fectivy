@@ -107,7 +107,7 @@ const LoginPage = () => {
                     </Button>
 
                     <Button type="button" className="w-100 mt-3 secondary-btn"
-                    onClick={() => navigate('/registerPage', { state: { from: targetPath } })}>
+                    onClick={() => navigate('/register', { state: { from: targetPath } })}>
                        Create Account
                     </Button>
                 </Form>
