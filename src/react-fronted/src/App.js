@@ -1,24 +1,35 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import MainLayout from './layouts/MainLayout';
+import HomePage from './pages/HomePage';
+import SearchPage from './pages/SearchPage';
+import SeeAllPage from './pages/SeeAllPages';
 import AuthPage from './pages/AuthPage';
 
+import './index.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 /**
  * Main Application Component.
  * Handles the routing and global layout of the application.
  */
 function App() {
-    return (
-        <Router>
-            <Routes>
-                {/* Routes for login and registration with smooth transitions */}
-                <Route path="/login" element={<AuthPage />} />
-                <Route path="/register" element={<AuthPage />} />
-                
-                {/* Redirect any unknown route or the root route directly to login for now */}
-                <Route path="*" element={<Navigate to="/login" replace />} />
-            </Routes>
-        </Router>
-    );
+  return (
+    <Router>
+      <Routes>
+        
+        <Route path="/login" element={<AuthPage />} />
+        <Route path="/register" element={<AuthPage />} />
+
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/search/:query" element={<SearchPage />} />
+          <Route path="/see-all/:type" element={<SeeAllPage />} />
+        </Route>
+
+        <Route path="*" element={<Navigate to="/login" replace />} />
+
+      </Routes>
+    </Router> 
+  );
 }
 
 export default App;

@@ -1,0 +1,33 @@
+/* base.css: Global settings, variables, and body defaults */
+
+:root {
+  --wolt-primary-bg: #0a0c17;
+  --wolt-secondary-bg: #161929;
+  --wolt-muted-border: rgba(255, 255, 255, 0.15);
+  --wolt-hover-blue: #009de0;
+  --wolt-disabled-bg: #171924;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--wolt-primary-bg) !important;
+  color: #ffffff !important;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+input::placeholder {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* For older webkit browsers */
+input::-webkit-input-placeholder {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.bg-wolt-secondary {
+  background-color: #161929 !important;
+}
+
