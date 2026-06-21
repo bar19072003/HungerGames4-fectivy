@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
+import AuthPage from './pages/AuthPage';
 
 /**
  * Main Application Component.
@@ -11,9 +10,9 @@ function App() {
     return (
         <Router>
             <Routes>
-                {/* Route for the login page */}
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
+                {/* Routes for login and registration with smooth transitions */}
+                <Route path="/login" element={<AuthPage />} />
+                <Route path="/register" element={<AuthPage />} />
                 
                 {/* Redirect any unknown route or the root route directly to login for now */}
                 <Route path="*" element={<Navigate to="/login" replace />} />

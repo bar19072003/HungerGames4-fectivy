@@ -129,141 +129,152 @@ const RegisterPage = () => {
     );
 
     return (
-        <div className="page-wrapper-loginAndRegister">
-            <Container className="d-flex flex-column justify-content-center align-items-center ">
+        <Container className="d-flex flex-column justify-content-center align-items-center ">
+            
+            <h1 className="text-white text-center mb-4 fw-bold mt-4">HungerGames</h1>
+            
+            <div className="register-header-container">
+                <button 
+                    type="button" 
+                    className="back-to-login-btn position-absolute start-0"
+                    onClick={() => navigate('/login', { state: { from: location.state?.from } })}
+                    aria-label="Back to login"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                </button>
+                <h3 className="text-white text-center mb-0 fw-bold">Register To HungerGames!</h3>
+            </div>
+            
+            <div className="register-form-width">
+                {error && <Alert variant="danger" className="text-center">{error}</Alert>}
                 
-                <h1 className="text-white text-center mb-4 fw-bold mt-4">Wolt</h1>
-                <h3 className="text-white text-center mb-4 fw-bold">Register To Wolt!</h3>
-                
-                <div className="register-form-width">
-                    {error && <Alert variant="danger" className="text-center">{error}</Alert>}
+                <Form noValidate validated={validated} onSubmit={handleRegister}>
                     
-                    <Form noValidate validated={validated} onSubmit={handleRegister}>
-                        
 
-                        <Form.Group className="mb-3" controlId="formUsername">
-                            <Form.Label className="text-white">Username</Form.Label>
+                    <Form.Group className="mb-3" controlId="formUsername">
+                        <Form.Label className="text-white">Username</Form.Label>
+                        <Form.Control 
+                                    type="text"
+                                    className="login-dark-input" 
+                                    value={username} onChange={(e) => setUsername(e.target.value)} 
+                                    required />
+                        <Form.Control.Feedback type="invalid">Username is required</Form.Control.Feedback>
+                    </Form.Group>
+
+
+                    <Form.Group className="mb-3" controlId="formPassword">
+                        <Form.Label className="text-white">Password</Form.Label>
+                        <OverlayTrigger
+                            trigger="focus"
+                            placement="right" 
+                            overlay={passwordRequirementsPopover}
+                            >
                             <Form.Control 
-                                        type="text"
-                                        className="login-dark-input" 
-                                        value={username} onChange={(e) => setUsername(e.target.value)} 
-                                        required />
-                            <Form.Control.Feedback type="invalid">Username is required</Form.Control.Feedback>
-                        </Form.Group>
+                                type="password"
+                                className="login-dark-input" 
+                                value={password} 
+                                onChange={(e) => setPassword(e.target.value)} 
+                                required />
+                        </OverlayTrigger>
+                        <Form.Control.Feedback type="invalid">Password is required</Form.Control.Feedback>
+                       
+                    </Form.Group>
+                    
+                    
 
 
-                        <Form.Group className="mb-3" controlId="formPassword">
-                            <Form.Label className="text-white">Password</Form.Label>
-                            <OverlayTrigger
-                                trigger="focus"
-                                placement="right" 
-                                overlay={passwordRequirementsPopover}
-                                >
-                                <Form.Control 
+                    <Form.Group className="mb-3" controlId="formVerifyPassword">
+                        <Form.Label className="text-white">Verify Password</Form.Label>
+                        <Form.Control 
                                     type="password"
                                     className="login-dark-input" 
-                                    value={password} 
-                                    onChange={(e) => setPassword(e.target.value)} 
+                                    value={verifyPassword} onChange={(e) => setVerifyPassword(e.target.value)} 
                                     required />
-                            </OverlayTrigger>
-                            <Form.Control.Feedback type="invalid">Password is required</Form.Control.Feedback>
-                           
-                        </Form.Group>
+                        <Form.Control.Feedback type="invalid">Passwords do not match</Form.Control.Feedback>
+                    </Form.Group>
+
+
+                    <Form.Group className="mb-3" controlId="formName">
+                        <Form.Label className="text-white">Full Name</Form.Label>
+                        <Form.Control 
+                                    type="text"
+                                    className="login-dark-input" 
+                                    value={name} onChange={(e) => setName(e.target.value)} 
+                                    required />
+                        <Form.Control.Feedback type="invalid">Full Name is required</Form.Control.Feedback>
+                    </Form.Group>
+
+
+                    <Form.Group className="mb-3" controlId="formPhone">
+                        <Form.Label className="text-white">Phone</Form.Label>
+                        <Form.Control 
+                                    type="tel"
+                                    className="login-dark-input" 
+                                    value={phone} onChange={(e) => setPhone(e.target.value)} 
+                                    required />
+                        <Form.Control.Feedback type="invalid">Phone is required</Form.Control.Feedback>
+                    </Form.Group>
+
+
+                    <Form.Group className="mb-3" controlId="formAddress">
+                        <Form.Label className="text-white">Address</Form.Label>
+                        <Form.Control 
+                                    type="text"
+                                    className="login-dark-input" 
+                                    value={address} onChange={(e) => setAddress(e.target.value)} 
+                                    required />
+                        <Form.Control.Feedback type="invalid">Address is required</Form.Control.Feedback>
+                    </Form.Group>
+
+
+                   {/* Profile Picture Avatar Upload */}
+                    <Form.Group className="mb-4 text-center" controlId="formPicture">
+                        <Form.Label className="text-white d-block mb-3">Profile Picture</Form.Label>
                         
-
-
-                        <Form.Group className="mb-3" controlId="formVerifyPassword">
-                            <Form.Label className="text-white">Verify Password</Form.Label>
-                            <Form.Control 
-                                        type="password"
-                                        className="login-dark-input" 
-                                        value={verifyPassword} onChange={(e) => setVerifyPassword(e.target.value)} 
-                                        required />
-                            <Form.Control.Feedback type="invalid">Passwords do not match</Form.Control.Feedback>
-                        </Form.Group>
-
-
-                        <Form.Group className="mb-3" controlId="formName">
-                            <Form.Label className="text-white">Full Name</Form.Label>
-                            <Form.Control 
-                                        type="text"
-                                        className="login-dark-input" 
-                                        value={name} onChange={(e) => setName(e.target.value)} 
-                                        required />
-                            <Form.Control.Feedback type="invalid">Full Name is required</Form.Control.Feedback>
-                        </Form.Group>
-
-
-                        <Form.Group className="mb-3" controlId="formPhone">
-                            <Form.Label className="text-white">Phone</Form.Label>
-                            <Form.Control 
-                                        type="tel"
-                                        className="login-dark-input" 
-                                        value={phone} onChange={(e) => setPhone(e.target.value)} 
-                                        required />
-                            <Form.Control.Feedback type="invalid">Phone is required</Form.Control.Feedback>
-                        </Form.Group>
-
-
-                        <Form.Group className="mb-3" controlId="formAddress">
-                            <Form.Label className="text-white">Address</Form.Label>
-                            <Form.Control 
-                                        type="text"
-                                        className="login-dark-input" 
-                                        value={address} onChange={(e) => setAddress(e.target.value)} 
-                                        required />
-                            <Form.Control.Feedback type="invalid">Address is required</Form.Control.Feedback>
-                        </Form.Group>
-
-
-                       {/* Profile Picture Avatar Upload */}
-                        <Form.Group className="mb-4 text-center" controlId="formPicture">
-                            <Form.Label className="text-white d-block mb-3">Profile Picture</Form.Label>
-                            
-                            {/* The label acts as the clickable avatar. Linked to the input via htmlFor */}
-                            <label htmlFor="formPictureInput" className="avatar-upload-label">
-                                {picture ? (
-                                    // Render the selected image
-                                    <img 
-                                        src={URL.createObjectURL(picture)} 
-                                        alt="Profile Preview" 
-                                        className="avatar-image"
-                                    />
-                                ) : (
-                                    // Render the default placeholder with an upload badge
-                                    <div className="avatar-placeholder">
-                                        <svg viewBox="0 0 24 24" fill="currentColor" className="default-user-icon">
-                                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                                        </svg>
-                                        <div className="upload-badge">+</div>
-                                    </div>
-                                )}
-                            </label>
-
-                            {/* The actual file input is hidden using Bootstrap's d-none class */}
-                            <Form.Control 
-                                id="formPictureInput"
-                                type="file" 
-                                accept="image/*"
-                                className="d-none" 
-                                onChange={(e) => setPicture(e.target.files[0])} 
-                                required 
-                            />
-                            
-                            {/* Manual validation feedback since the input itself is hidden */}
-                            {!picture && validated && (
-                                <div className="text-danger mt-2 small">Please select an image</div>
+                        {/* The label acts as the clickable avatar. Linked to the input via htmlFor */}
+                        <label htmlFor="formPictureInput" className="avatar-upload-label">
+                            {picture ? (
+                                // Render the selected image
+                                <img 
+                                    src={URL.createObjectURL(picture)} 
+                                    alt="Profile Preview" 
+                                    className="avatar-image"
+                                />
+                            ) : (
+                                // Render the default placeholder with an upload badge
+                                <div className="avatar-placeholder">
+                                    <svg viewBox="0 0 24 24" fill="currentColor" className="default-user-icon">
+                                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                                    </svg>
+                                    <div className="upload-badge">+</div>
+                                </div>
                             )}
-                        </Form.Group>
-                        
-                        <Button type="submit" className="w-100 primary-btn rounded-pill mt-2 mb-4">
-                            Create User
-                        </Button>
-                    </Form>
+                        </label>
 
-                    </div>
-            </Container>
-        </div>
+                        {/* The actual file input is hidden using Bootstrap's d-none class */}
+                        <Form.Control 
+                            id="formPictureInput"
+                            type="file" 
+                            accept="image/*"
+                            className="d-none" 
+                            onChange={(e) => setPicture(e.target.files[0])} 
+                            required 
+                        />
+                        
+                        {/* Manual validation feedback since the input itself is hidden */}
+                        {!picture && validated && (
+                            <div className="text-danger mt-2 small">Please select an image</div>
+                        )}
+                    </Form.Group>
+                    
+                    <Button type="submit" className="w-100 primary-btn rounded-pill mt-2 mb-4">
+                        Create User
+                    </Button>
+                </Form>
+            </div>
+        </Container>
     );
 };
 

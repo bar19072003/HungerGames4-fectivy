@@ -3,7 +3,7 @@ import { login as loginApi } from '../services/authService';
 import { useLocation , useNavigate } from 'react-router-dom';
 
 // Import the ready-made components from react-bootstrap
-import { Form, Button, Container, Alert, Card } from 'react-bootstrap';
+import { Form, Button, Container, Alert } from 'react-bootstrap';
 import '../WoltTheme.css'; // Import the global Wolt theme
 import './LoginPage.css';
 
@@ -54,65 +54,62 @@ const LoginPage = () => {
         }
     };
     return (
-        // The main wrapper now handles the background color directly
-        <div className="page-wrapper-loginAndRegister">
-            <Container className="d-flex flex-column justify-content-center align-items-center login-form-width">
+        <Container className="d-flex flex-column justify-content-center align-items-center login-form-width">
+            
+            {/* Main Title matching the Wolt design */}
+            <h1 className="text-white text-center mb-4 fw-bold">HungerGames</h1>
+            <h4 className="text-white text-center mb-4 fw-bold">Login to your Hunger Games account</h4>
+            
+            {error && <Alert variant="danger" className="w-100 text-center ">
+                {error}
+                </Alert>
+                }
+            
+            <Form noValidate validated={validated} onSubmit={handleLogin} className="w-100 login-form-width">
                 
-                {/* Main Title matching the Wolt design */}
-                <h1 className="text-white text-center mb-4 fw-bold">Wolt</h1>
-                <h4 className="text-white text-center mb-4 fw-bold">Login to your wolt account</h4>
-                
-                {error && <Alert variant="danger" className="w-100 text-center ">
-                    {error}
-                    </Alert>
-                    }
-                
-                <Form noValidate validated={validated} onSubmit={handleLogin} className="w-100 login-form-width">
-                    
-                    {/* Username Input */}
-                    <Form.Group className="mb-4" controlId="formUsername">
-                        {/* Label is styled to be white and right-aligned if needed */}
-                        <Form.Label className="text-white">Username</Form.Label>
-                        <Form.Control 
-                            type="text" 
-                            className="login-dark-input"
-                            placeholder="Enter username" 
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)} 
-                            required 
-                        />
-                        <Form.Control.Feedback type="invalid">
-                            please enter a user name
-                        </Form.Control.Feedback>
-                    </Form.Group>
+                {/* Username Input */}
+                <Form.Group className="mb-4" controlId="formUsername">
+                    {/* Label is styled to be white and right-aligned if needed */}
+                    <Form.Label className="text-white">Username</Form.Label>
+                    <Form.Control 
+                        type="text" 
+                        className="login-dark-input"
+                        placeholder="Enter username" 
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)} 
+                        required 
+                    />
+                    <Form.Control.Feedback type="invalid">
+                        please enter a user name
+                    </Form.Control.Feedback>
+                </Form.Group>
 
-                    {/* Password Input */}
-                    <Form.Group className="mb-4" controlId="formPassword">
-                        <Form.Label className="text-white">Password</Form.Label>
-                        <Form.Control 
-                            type="password" 
-                            className="login-dark-input"
-                            placeholder="Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)} 
-                            required 
-                        />
-                        <Form.Control.Feedback type="invalid">
-                            please enter a password
-                        </Form.Control.Feedback>
-                    </Form.Group>
-                    
-                    <Button type="submit" className="w-100 primary-btn">
-                       Login
-                    </Button>
+                {/* Password Input */}
+                <Form.Group className="mb-4" controlId="formPassword">
+                    <Form.Label className="text-white">Password</Form.Label>
+                    <Form.Control 
+                        type="password" 
+                        className="login-dark-input"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)} 
+                        required 
+                    />
+                    <Form.Control.Feedback type="invalid">
+                        please enter a password
+                    </Form.Control.Feedback>
+                </Form.Group>
+                
+                <Button type="submit" className="w-100 primary-btn">
+                   Login
+                </Button>
 
-                    <Button type="button" className="w-100 mt-3 secondary-btn"
-                    onClick={() => navigate('/register', { state: { from: targetPath } })}>
-                       Create Account
-                    </Button>
-                </Form>
-            </Container>
-        </div>
+                <Button type="button" className="w-100 mt-3 secondary-btn"
+                onClick={() => navigate('/register', { state: { from: targetPath } })}>
+                   Create Account
+                </Button>
+            </Form>
+        </Container>
     );
 };
 
