@@ -21,6 +21,8 @@ class UserModel {
      * @param {string} userData.name - The name of the user.
      * @param {string} userData.phone - The phone number of the user.
      * @param {string} userData.address - The physical address of the user.
+     * @param {string} userData.role - The role of the user (e.g., 'user', 'admin').
+     * @param {string} userData.picture - The Base64 encoded profile picture of the user.
      * @returns {Object} The newly created user object.
      */
     createUser(userData){
@@ -32,7 +34,8 @@ class UserModel {
             name: userData.name,
             phone: userData.phone,
             address: userData.address,
-            role: userData.role || 'user' // default role is 'user', can be overridden by service if needed
+            role: userData.role || 'user', // default role is 'user', can be overridden by service if needed
+            picture: userData.picture
         };
 
         // Store the newly created user in our main in-memory Map

@@ -6,41 +6,57 @@
 const API_URL = 'http://localhost:3000/api';
 
 /**
- * Sends user registration data to the server.
- * Uses FormData to handle the profile picture file upload alongside text fields.
- * * @param {Object} userData - An object containing user details.
+ * Helper function to convert a physical File object into a Base64 encoded string.
+ * @param {File} file - The image file selected by the user.
+ * @returns {Promise<string>} A promise that resolves with the Base64 string.
+ */
+const convertFileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        // Start reading the file as a Data URL (Base64)
+        reader.readAsDataURL(file);
+        // When the reading is complete, resolve the promise with the result
+        reader.onload = () => resolve(reader.result);
+        // If there's an error during reading, reject the promise with the error
+        reader.onerror = (error) => reject(error);
+    });
+};
+
+
+/**
+ * Sends user registration data to the server using a standard JSON payload.
+ * @param {Object} userData - An object containing user details.
  * @param {File} imageFile - The profile picture file selected by the user.
  * @returns {Promise<Object>} The server response.
- * @throws {Error} If registration fails (e.g., username already exists).
+ * @throws {Error} If registration fails.
  */
 export const registerUser = async (userData, imageFile) => {
-    // We use FormData instead of JSON because we are transmitting a file
-    const formData = new FormData();
-    
-    // Append all text fields
-    formData.append('username', userData.username);
-    formData.append('password', userData.password);
-    formData.append('name', userData.name);
-    formData.append('phone', userData.phone);
-    formData.append('address', userData.address);
-    // Role is defaulted to 'user' as requested, keeping it hidden from the UI
-    formData.append('role', 'user'); 
+    let base64Picture = null;
 
-    // Append the image file if it exists
-    if (imageFile) {
-        formData.append('picture', imageFile);
-    }
+    // Convert the image file to Base64.
+    base64Picture = await convertFileToBase64(imageFile);
+
+    // Build a standard JavaScript object
+    const payload = {
+        username: userData.username,
+        password: userData.password,
+        name: userData.name,
+        phone: userData.phone,
+        address: userData.address,
+        role: 'user', // Forced role
+        picture: base64Picture
+    };
 
     const response = await fetch(`${API_URL}/users`, {
         method: 'POST',
-        // Note: When using FormData, we DO NOT set the 'Content-Type' header.
-        // The browser automatically sets it to 'multipart/form-data' with the correct boundary.
-        body: formData
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
     });
 
     if (!response.ok) {
         const errorData = await response.json();
-        // This will catch the "Username already exists" error from your server
         throw new Error(errorData.error || 'Registration failed');
     }
 

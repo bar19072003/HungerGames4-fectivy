@@ -67,3 +67,18 @@
     background-color: #8a8a8a !important;
     border-color: #e2f6ff !important;
 }
+
+.login-dark-input:-webkit-autofill,
+.login-dark-input:-webkit-autofill:hover, 
+.login-dark-input:-webkit-autofill:focus, 
+.login-dark-input:-webkit-autofill:active {
+    /* Force the text color to remain white */
+    -webkit-text-fill-color: white !important;
+    
+    /* * The Transition Hack:
+     * Browsers ignore background-color overrides for autofill.
+     * Instead, we tell the browser to take 5000 seconds to transition to its default white background.
+     * This effectively keeps your transparent dark background intact forever.
+     */
+    transition: background-color 5000s ease-in-out 0s;
+}

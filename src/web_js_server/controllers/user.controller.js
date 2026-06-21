@@ -12,8 +12,8 @@ class UserController {
      * @param {Object} res - Express response object.
      */
     createUser(req, res) {
-        const { username, password, name, phone, address ,role } = req.body;
-
+        const { username, password, name, phone, address ,role, picture } = req.body;
+        
         // Check if username is already taken
         const existingUser = userService.getUserByUsername(username);
         if (existingUser) {
@@ -22,7 +22,7 @@ class UserController {
         
         try {
             // Create the new user using the service (validation handled by service)
-            const newUser = userService.createUser({ username, password, name, phone, address, role });
+            const newUser = userService.createUser({ username, password, name, phone, address, role, picture });
             // Return 201 Created with Location header pointing to the new resource
             return res.status(201).location(`/api/users/${newUser.id}`).end();
         } catch (error) {
