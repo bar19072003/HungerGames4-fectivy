@@ -47,6 +47,7 @@ const LoginPage = () => {
         try {
             const data = await loginApi(username, password);
             localStorage.setItem('jwt_token', data.authorization);
+            localStorage.setItem('user_id', data.user_id);
             console.log("Login successful!");
             navigate(targetPath, { replace: true }); // Navigate to the target path after successful login
         } catch (err) {

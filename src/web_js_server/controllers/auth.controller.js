@@ -43,7 +43,7 @@ class AuthController {
         );
 
         // Returns the token with 201
-        return res.status(201).json({ authorization: token });
+        return res.status(201).json({ authorization: token , user_id : userId });
     }
 }
 
