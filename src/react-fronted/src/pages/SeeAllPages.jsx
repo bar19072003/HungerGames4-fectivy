@@ -3,18 +3,29 @@ import { useParams, useNavigate } from 'react-router-dom';
 import RestaurantCard from '../components/RestaurantCard';
 
 function SeeAllPage() {
-  const { type } = useParams(); // 'near-you' או 'top-rated'
+  // 1. Hooks & States: 'type' holds the specific dynamic view filter parameter ('near-you' or 'top-rated')
+  const { type } = useParams(); 
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  // 2. React Router Trigger: Fetches data asynchronously whenever the dynamic sub-category type shifts
   useEffect(() => {
     const fetchRestaurants = async () => {
       setLoading(true);
       
       try {
         const token = localStorage.getItem('userToken');
-        const response = await fetch('http://localhost:3000/api/restaurants', {
+        
+        // Maps Frontend parameters cleanly to Backend query configurations
+        let backendUrl = 'http://localhost:3000/api/restaurants?limit=10';
+        if (type === 'near-you') {
+          backendUrl += '&sortBy=distance';
+        } else if (type === 'top-rated') {
+          backendUrl += '&sortBy=rating';
+        }
+
+        const response = await fetch(backendUrl, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -22,30 +33,19 @@ function SeeAllPage() {
           }
         });
         
-        let data = await response.json();
-        
-        let processedData = [...data];
-
-        // מבצעים את המיון והסינון בצורה בטוחה
-        if (type === 'near-you') {
-          processedData.sort((a, b) => Number(a.distance || 0) - Number(b.distance || 0));
-          processedData = processedData.slice(0, 10);
-        } else if (type === 'top-rated') {
-          processedData.sort((a, b) => Number(b.rating || 0) - Number(a.rating || 0));
-          processedData = processedData.slice(0, 10);
-        }
-
-        setRestaurants(processedData);
+        const data = await response.json();
+        setRestaurants(data); // Expects the backend array to arrive pre-sorted and capped
         setLoading(false);
       } catch (error) {
-        console.error("Failed to fetch from server, loading fallback data:", error);
+        console.error("Failed to fetch from server, rendering empty grid state:", error);
         setLoading(false);
       }
     };
 
     fetchRestaurants();
-  }, [type]);
+  }, [type]); // Forces re-fetch calculation if parameter updates natively
 
+  // 3. UI Grid Layout Definition: Builds 4 columns per row on desktop using standard Bootstrap mixins
   const gridItems = restaurants.map((restaurant, index) => (
     <div className="col-12 col-md-6 col-lg-3" key={`seeall-${index}`}>
       <RestaurantCard {...restaurant} />
@@ -54,10 +54,8 @@ function SeeAllPage() {
 
   return (
     <div className="container mt-5 pt-5 text-start" style={{ direction: 'ltr' }}>
-      <button className="btn btn-outline-light btn-sm mb-4" onClick={() => navigate(-1)}>
-        ← Back
-      </button>
       
+      {/* Dynamic Heading Title based on the active dynamic path segment context */}
       <h2 className="text-white fw-bold mb-4">
         {type === 'near-you' ? 'Closest Restaurants Near You' : 'Top Rated Restaurants ⭐'}
       </h2> 

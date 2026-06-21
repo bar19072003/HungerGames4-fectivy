@@ -4,7 +4,7 @@
     border-radius: 16px;
     direction: ltr;
     margin-bottom: 40px;
-    position: relative; /* מאפשר מיקום מוחלט לחצים */
+    position: relative;
 }
 
 .categories-header-row {
@@ -21,7 +21,7 @@
     margin: 0;
 }
 
-/* קונטיינר החצים - יושב בצד ימין למעלה */
+
 .carousel-arrows-container {
     position: absolute;
     top: 30px;
@@ -31,11 +31,11 @@
     z-index: 10;
 }
 
-/* עיצוב חצי ה-Wolt הדינמיים בצבעי הטורקיז שלכם */
+
 .wolt-arrow-btn {
     background-color: rgba(255, 255, 255, 0.05);
     border: none;
-    color: #00bfa5; /* צבע הטורקיז מהעיצוב הקודם */
+    color: #00bfa5;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -50,14 +50,14 @@
     background-color: rgba(255, 255, 255, 0.15);
 }
 
-/* סטייל כשהחץ מבוטל (סוף הגלילה) */
+
 .wolt-arrow-btn:disabled {
     color: rgba(255, 255, 255, 0.2);
     background-color: rgba(255, 255, 255, 0.02);
     cursor: not-allowed;
 }
 
-/* מסלול הגלילה - מעלימים פסי גלילה מכוערים */
+
 .carousel-scroller-track {
     gap: 20px;
     padding-bottom: 5px;
@@ -70,7 +70,6 @@
     scrollbar-width: none;
 }
 
-/* כרטיסי הקטגוריה שלכם - נשארים בדיוק אותו דבר */
 .category-card-wrapper {
     display: flex;
     flex-direction: column;

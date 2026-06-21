@@ -94,9 +94,8 @@
         {/* --- CAROUSEL TRACK TRACK --- */}
         <div 
           ref={carouselRef}
-          className="d-flex flex-nowrap overflow-x-auto pb-3 custom-carousel" 
-          style={{ gap: '1rem', scrollBehavior: 'smooth' }} 
-        >
+          className="d-flex flex-nowrap custom-carousel" 
+          style={{ gap: '1rem', scrollBehavior: 'smooth', overflowX: 'auto', overflowY: 'visible', padding: '16px' }} >
           {/* Renders the dynamic array of components passed from the parent view */}
           {children} 
         </div>

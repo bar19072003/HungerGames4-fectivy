@@ -4,15 +4,41 @@ import { useNavigate } from 'react-router-dom';
 /**
  * RestaurantCard Component
  * Displays individual restaurant overview with image, info text, distance and rating.
+ * Includes a smooth hover scaling animation that pops above adjacent container layers.
  */
 function RestaurantCard({ id, name, description, distance, rating, image }) {
     const navigate = useNavigate();
+    
     const handleCardClick = () => {
         navigate(`/restaurant/${id}`);
-    }
+    };
+
     return (
-        /* Card Root - Rigid width layout, flexShrink prevents track squishing */
-        <div style={{ width: '280px', flexShrink: 0 }} onClick={handleCardClick}>
+        /* Card Root - Dynamic layering using zIndex on hover to prevent clipping 
+           by sibling layout containers or scroll tracks.
+        */
+        <div 
+            className="pe-auto"
+            style={{ 
+                width: '280px', 
+                flexShrink: 0, 
+                cursor: 'pointer',
+                position: 'relative', // Mandatory for zIndex to take effect
+                zIndex: 1,            // Base layer elevation
+                transition: 'transform 0.2s ease-in-out, z-index 0.2s ease-in-out'
+            }} 
+            onClick={handleCardClick}
+            // Elevates both the scale and the layer depth on mouse enter
+            onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.03)';
+                e.currentTarget.style.zIndex = '10'; // Pops it to the top layer
+            }}
+            // Restores original scale and grid depth on mouse leave
+            onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.zIndex = '1';  // Drops it back down
+            }}
+        >
             
             {/* Main Framework Wrapper */}
             <div className="card h-100 border-0 shadow-sm custom-card rounded-4 overflow-hidden">
@@ -39,7 +65,7 @@ function RestaurantCard({ id, name, description, distance, rating, image }) {
                             <p className="card-text small mb-0 text-truncate" title={name} style={{ opacity: 0.8 }}>{description}</p>
                         </div>
                         
-                        {/* Distance Metric Badge - flexShrink protects box shape from text overcrowding */}
+                        {/* Distance Metric Badge */}
                         <div className="d-flex flex-column align-items-center justify-content-center rounded-3 fw-bold p-2 text-center" 
                             style={{ 
                                 backgroundColor: '#293166',

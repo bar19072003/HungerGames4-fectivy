@@ -4,15 +4,19 @@ import RestaurantCard from '../components/RestaurantCard';
 import ProductCard from '../components/ProductCard';
 
 function SearchPage() {
+  // 1. Hooks & States: Extract query param from URL and initialize compartmentalized object data
   const { query } = useParams();
   const [searchResults, setSearchResults] = useState({ restaurants: [], products: [] });
   const [loading, setLoading] = useState(true);
 
+  // 2. React Router Trigger: Runs every time the user updates the search input string in the Navbar
   useEffect(() => {
     const fetchSearchResults = async () => {
       setLoading(true);
       try {
         const token = localStorage.getItem('userToken');
+        
+        // Dynamic endpoint syntax packing the encoded text value directly inside the path param
         const response = await fetch(`http://localhost:3000/api/search/${encodeURIComponent(query)}`, {
           method: 'GET',
           headers: {
@@ -22,11 +26,12 @@ function SearchPage() {
         });
         
         const data = await response.json();
-        setSearchResults(data);
+        setSearchResults(data); // Expects JSON payload object layout: { restaurants: [...], products: [...] }
         setLoading(false);
       } catch (error) {
         console.error("Search API offline, rendering local mock results:", error);
         
+        // OFFLINE DEV BUFFER: Sample data mapping matching queries dynamically to simulate database results
         const fakeResponseData = {
           restaurants: [
             { id: "res-uuid-fastfood-01", name: `Best Pizza containing "${query}"`, description: "Italian Pizza", rating: "9.0", distance: "0.5", image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500" },
@@ -46,14 +51,16 @@ function SearchPage() {
     if (query) {
       fetchSearchResults();
     }
-  }, [query]);
+  }, [query]); // CRITICAL: Forces full UI re-fetch cycle whenever dynamic keyword changes
 
+  // 3. UI Component Mapping: Renders 4 columns per row on large desktop displays (col-lg-3)
   const restaurantGridItems = searchResults.restaurants.map((restaurant, index) => (
     <div className="col-12 col-md-6 col-lg-3" key={`res-${index}`}>
       <RestaurantCard {...restaurant} />
     </div>
   ));
 
+  // 4. UI Component Mapping: Renders 2 columns per row for specialized product cards (col-md-6)
   const productGridItems = searchResults.products.map((product, index) => (
     <div className="col-12 col-md-6" key={`prod-${index}`}>
       <ProductCard {...product} />
@@ -68,7 +75,7 @@ function SearchPage() {
         <div className="text-white text-center py-5">Searching Wolt...</div>
       ) : (
         <div>
-          {/* Restaurants Grid Section */}
+          {/* --- RESTAURANTS RESULTS DISPLAY --- */}
           <h3 className="text-white fw-bold fs-4 mb-3 mt-4">Restaurants</h3>
           {searchResults.restaurants.length > 0 ? (
             <div className="row g-4">{restaurantGridItems}</div>
@@ -76,9 +83,10 @@ function SearchPage() {
             <p className="text-white-50 small">No restaurants found matching your search.</p>
           )}
 
+          {/* Section Divider Line */}
           <hr className="border-secondary my-5" style={{ opacity: 0.2 }} />
 
-          {/* Products Grid Section */}
+          {/* --- DISHES & PRODUCTS RESULTS DISPLAY --- */}
           <h3 className="text-white fw-bold fs-4 mb-3">Dishes & Products</h3>
           {searchResults.products.length > 0 ? (
             <div className="row g-3">{productGridItems}</div>
