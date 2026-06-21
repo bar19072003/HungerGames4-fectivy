@@ -8,14 +8,7 @@ class OrderController {
      * @param {*} res - Express response object.
      */
     createOrder(req, res) {
-        const authHeader = req.headers.authorization;
-
-        if (!authHeader){
-            return res.status(400).json({ error: "Missing authorization header" })
-        }
-
-        //Will change when we start using JWT
-        const userId = authHeader
+        const userId = req.user.id; // Extract user ID from the authenticated request
 
         // Validate the request body to ensure it contains the necessary order data
         if (!req.body || !Array.isArray(req.body.items) || req.body.items.length === 0) {
@@ -45,14 +38,7 @@ class OrderController {
      * @param {*} res - Express response object.
      */
     getOrders(req, res) {
-        const authHeader = req.headers.authorization;
-
-        if (!authHeader){
-            return res.status(400).json({ error: "Missing authorization header" })
-        }
-
-        //Will change when we start using JWT
-        const userId = authHeader
+        const userId = req.user.id; // Extract user ID from the authenticated request
         
         try {
             const orders = orderService.getOrdersByUserId(userId)
@@ -70,14 +56,8 @@ class OrderController {
      * @param {*} res - Express response object.
      */
    getOrderById(req, res) {
-        const authHeader = req.headers.authorization;
+        const userId = req.user.id; // Extract user ID from the authenticated request
 
-        if (!authHeader){
-            return res.status(400).json({ error: "Missing authorization header" })
-        }
-
-        //Will change when we start using JWT
-        const userId = authHeader
         if (!userId) {
             return res.status(400).json({ error: "Missing user ID in headers" });
         }
@@ -101,14 +81,8 @@ class OrderController {
      * @param {*} res - Express response object.
      */
     updateOrder(req, res) {
-        const authHeader = req.headers.authorization;
+        const userId = req.user.id; // Extract user ID from the authenticated request
 
-        if (!authHeader){
-            return res.status(400).json({ error: "Missing authorization header" })
-        }
-
-        //Will change when we start using JWT
-        const userId = authHeader
         if (!userId) {
             return res.status(400).json({ error: "Missing user ID in headers" });
         }
@@ -133,14 +107,8 @@ class OrderController {
      * @param {*} res - Express response object.
      */
     deleteOrder(req, res) {
-        const authHeader = req.headers.authorization;
-
-        if (!authHeader){
-            return res.status(400).json({ error: "Missing authorization header" })
-        }
-
-        //Will change when we start using JWT
-        const userId = authHeader
+        const userId = req.user.id; // Extract user ID from the authenticated request
+        
         if (!userId) {
             return res.status(400).json({ error: "Missing user ID in headers" });
         }

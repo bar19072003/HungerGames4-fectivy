@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const userService = require('../services/user.service');
 
 /**
@@ -25,8 +26,24 @@ class AuthController {
             return res.status(400).json({ error: "Invalid username or password" });
         }
 
-        // Returns the id of the user as the token with 201
-        return res.status(201).json({ authorization: userId });
+        const userRole = userService.getUserRole(userId);
+
+        // JWT Logic:
+        // 1. Create the payload (the data we want to encode inside the token)
+        const payload = {
+            id: userId,
+            role: userRole
+        };
+
+        // 2. Sign the token with a secret key and set an expiration time - 24 hours
+        const token = jwt.sign(
+            payload,
+            process.env.JWT_SECRET || 'default_secret', 
+            { expiresIn: '24h' }
+        );
+
+        // Returns the token with 201
+        return res.status(201).json({ authorization: token });
     }
 }
 

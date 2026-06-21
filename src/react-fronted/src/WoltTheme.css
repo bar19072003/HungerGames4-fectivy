@@ -1,0 +1,13 @@
+/* WoltTheme */
+/* Deep dark blue background for the entire screen */
+.page-wrapper-home {
+    background-color: #1C1F31; 
+    min-height: 100vh;
+}
+.page-wrapper-loginAndRegister {
+    background-color: #0A0C17; 
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}

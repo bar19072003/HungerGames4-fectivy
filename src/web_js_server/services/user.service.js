@@ -19,7 +19,7 @@ class UserService {
             return false;
         }
 
-        const requiredFields = ['username', 'password', 'name', 'phone', 'address'];
+        const requiredFields = ['username', 'password', 'name', 'phone', 'address', 'picture'];
         const allowedFields = requiredFields;
 
         if (!isUpdate) {
@@ -46,14 +46,14 @@ class UserService {
     
     /**
      * Creates a new user with validation.
-     * @param {Object} userData - The user data (username, password, name, phone, address).
+     * @param {Object} userData - The user data (username, password, name, phone, address, picture).
      * @returns {Object} The newly created user.
      * @throws Error if validation fails.
      */
     createUser(userData) {
         // Validate user data before creation
         if (!this._validateUserData(userData, false)) {
-            throw new Error('Invalid user data: username, password, name, phone, and address are required and must be non-empty strings');
+            throw new Error('Invalid user data: username, password, name, phone, address, and picture are required and must be non-empty strings');
         }
 
         // Generate UUID for the new user
@@ -77,6 +77,11 @@ class UserService {
             return null;
         }
         return user.id;
+    }
+
+    getUserRole(userId) {
+        const user = this.getUserById(userId);
+        return user ? user.role : null;
     }
 }
 
