@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken');
  * @param {Object} res - The Express response object.
  * @param {Function} next - The next middleware or controller.
  */
-const requireAuth = (req, re    , next) => {
+const requireAuth = (req, res, next) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
