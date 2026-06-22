@@ -20,7 +20,7 @@ class UserService {
         }
 
         const requiredFields = ['username', 'password', 'name', 'phone', 'address', 'picture'];
-        const allowedFields = requiredFields;
+        const allowedFields = [...requiredFields, 'coordinates', 'role'];
 
         if (!isUpdate) {
             // For creation: all required fields must be present and non-empty strings

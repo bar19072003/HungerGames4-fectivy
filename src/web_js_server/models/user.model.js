@@ -35,7 +35,8 @@ class UserModel {
             phone: userData.phone,
             address: userData.address,
             role: userData.role || 'user', // default role is 'user', can be overridden by service if needed
-            picture: userData.picture
+            picture: userData.picture,
+            coordinates: userData.coordinates || { lat: 0, lng: 0 }
         };
 
         // Store the newly created user in our main in-memory Map

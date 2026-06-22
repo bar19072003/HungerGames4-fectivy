@@ -13,7 +13,7 @@ class RestaurantController {
 
      // Handles the creation of a new restaurant.
     createRestaurant(req, res) {
-        const { name, description, address, phone, kosher , working_hours } = req.body;
+        const { name, description, address, phone, kosher, working_hours, coordinates } = req.body;
 
         try {
             // Create the restaurant using the service layer (validation handled by service)
@@ -23,7 +23,8 @@ class RestaurantController {
                 address,
                 phone,
                 kosher,
-                working_hours
+                working_hours,
+                coordinates
             });
 
             // Return 201 Created with the Location header pointing to the new resource

@@ -32,6 +32,7 @@ class RestaurantModel {
             phone: restaurantData.phone,
             kosher: restaurantData.kosher,
             working_hours: restaurantData.working_hours,
+            coordinates: restaurantData.coordinates || { lat: 0, lng: 0 },
             rating: 0, // Initial rating is set to 0
 
             /**

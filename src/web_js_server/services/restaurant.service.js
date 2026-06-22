@@ -21,7 +21,7 @@ class RestaurantService {
         }
 
         const requiredFields = ['name', 'address', 'phone', 'kosher', 'working_hours'];
-        const optionalFields = ['description'];
+        const optionalFields = ['description', 'coordinates'];
         const allowedFields = [...requiredFields, ...optionalFields];
 
         if (!isUpdate) {
@@ -132,7 +132,7 @@ class RestaurantService {
         const mergedRestaurant = { ...resForUpdate };
 
         // Define a strict whitelist of fields the user is allowed to modify
-        const allowedUpdates = ['name', 'description', 'address', 'phone', 'kosher', 'working_hours'];
+        const allowedUpdates = ['name', 'description', 'address', 'phone', 'kosher', 'working_hours', 'coordinates'];
 
         // Iterate and apply only the permitted and provided fields
         allowedUpdates.forEach(field => {
