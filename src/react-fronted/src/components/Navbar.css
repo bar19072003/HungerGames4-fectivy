@@ -1,0 +1,10 @@
+.custom-search-group input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.custom-search-group:focus-within {
+  box-shadow: 0 0 0 2px #ffffff !important; /* הילה לבנה בעובי 2 פיקסלים */
+  border-radius: 20px;
+  transition: box-shadow 0.15s ease-in-out; 
+}

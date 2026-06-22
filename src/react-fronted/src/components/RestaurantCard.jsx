@@ -41,7 +41,7 @@ function RestaurantCard({ id, name, description, distance, rating, image }) {
         >
             
             {/* Main Framework Wrapper */}
-            <div className="card h-100 border-0 shadow-sm custom-card rounded-4 overflow-hidden">
+            <div className="card h-100 shadow-sm custom-card rounded-4 overflow-hidden border-0 bg-transparent">
                 
                 {/* Cover Imagery */}
                 <div className="position-relative">
