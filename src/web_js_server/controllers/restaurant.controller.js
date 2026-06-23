@@ -18,7 +18,6 @@ class RestaurantController {
         try {
             // Create the restaurant using the service layer (validation handled by service)
             const newRestaurant = restaurantService.createRestaurant({
-                name,
                 description,
                 address,
                 phone,
