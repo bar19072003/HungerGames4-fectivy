@@ -19,13 +19,19 @@ class UserService {
             return false;
         }
 
-        const requiredFields = ['username', 'password', 'name', 'phone', 'address', 'picture'];
-        const allowedFields = requiredFields;
+        const stringFields = ['username', 'password', 'name', 'phone', 'picture'];
+        const numberFields = ['addressX', 'addressY'];
+        const allowedFields = [...stringFields, ...numberFields];
 
         if (!isUpdate) {
-            // For creation: all required fields must be present and non-empty strings
-            for (const field of requiredFields) {
+            // For creation: all required fields must be present
+            for (const field of stringFields) {
                 if (typeof data[field] !== 'string' || data[field].trim() === '') {
+                    return false;
+                }
+            }
+            for (const field of numberFields) {
+                if (typeof data[field] !== 'number' || isNaN(data[field])) {
                     return false;
                 }
             }
@@ -35,8 +41,14 @@ class UserService {
                 if (!allowedFields.includes(field)) {
                     continue;
                 }
-                if (data[field] === null || (typeof data[field] !== 'string' || data[field].trim() === '')) {
-                    return false;
+                if (stringFields.includes(field)) {
+                    if (data[field] === null || typeof data[field] !== 'string' || data[field].trim() === '') {
+                        return false;
+                    }
+                } else if (numberFields.includes(field)) {
+                    if (data[field] === null || typeof data[field] !== 'number' || isNaN(data[field])) {
+                        return false;
+                    }
                 }
             }
         }
@@ -46,14 +58,14 @@ class UserService {
     
     /**
      * Creates a new user with validation.
-     * @param {Object} userData - The user data (username, password, name, phone, address, picture).
+     * @param {Object} userData - The user data (username, password, name, phone, addressX, addressY, picture).
      * @returns {Object} The newly created user.
-     * @throws Error if validation fails.
+     * @throws {Error} If validation fails.
      */
     createUser(userData) {
         // Validate user data before creation
         if (!this._validateUserData(userData, false)) {
-            throw new Error('Invalid user data: username, password, name, phone, address, and picture are required and must be non-empty strings');
+            throw new Error('Invalid user data: username, password, name, phone, picture (strings) and addressX, addressY (numbers) are required');
         }
 
         // Generate UUID for the new user

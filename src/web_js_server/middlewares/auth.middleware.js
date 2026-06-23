@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const restaurantService = require('../services/restaurant.service');
 
 /**
  * Authentication Middleware (Strict).
@@ -70,24 +71,48 @@ const optionalAuth = (req, res, next) => {
 
 
 /** 
- * Admin Authorization Middleware.
+ * Restaurant Owner Authorization Middleware.
  *
  * @param {Object} req - The Express request object.
  * @param {Object} res - The Express response object.
  * @param {Function} next - The next middleware or controller.
  */
-const requireAdmin = (req, res, next) => {
+const requireRestaurantOwner = (req, res, next) => {
     // req.user was attached by the previous requireAuth middleware
-    if (req.user && req.user.role === 'admin') {
-        next(); // User is admin, let them proceed
+    if (req.user && req.user.role === 'restaurant_owner') {
+        next(); // User is restaurant_owner, let them proceed
     } else {
-        return res.status(403).json({ error: 'Forbidden: Admin access required' });
+        return res.status(403).json({ error: 'Forbidden: Restaurant owner access required' });
     }
 };
 
-// Export both middlewares as an object
+/** 
+ * Restaurant Ownership Validation Middleware.
+ * Ensures that the restaurant_owner actually owns the restaurant they are trying to modify.
+ */
+const requireRestaurantOwnership = (req, res, next) => {
+    const restaurantId = req.params.id; // Assuming restaurant ID is in the URL as :id
+
+    if (!restaurantId) {
+        return res.status(400).json({ error: 'Bad Request: Missing restaurant ID' });
+    }
+
+    const restaurant = restaurantService.getRestaurantById(restaurantId);
+    if (!restaurant) {
+        return res.status(404).json({ error: 'Restaurant not found' });
+    }
+
+    if (restaurant.ownerId !== req.user.id) {
+        return res.status(403).json({ error: 'Forbidden: You do not own this restaurant' });
+    }
+
+    next();
+};
+
+// Export middlewares as an object
 module.exports = {
     requireAuth,
     optionalAuth,
-    requireAdmin
+    requireRestaurantOwner,
+    requireRestaurantOwnership
 };

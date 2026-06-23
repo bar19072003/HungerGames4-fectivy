@@ -7,7 +7,7 @@ class UserModel {
         /**
          * Internal Map to store all users.
          * Key: User ID (UUID)
-         * Value: User Object { id, username, password, name, phone, address }
+         * Value: User Object { id, username, password, name, phone, addressX, addressY }
          */
         this.users = new Map();
     }
@@ -20,8 +20,9 @@ class UserModel {
      * @param {string} userData.password - The password for the user.
      * @param {string} userData.name - The name of the user.
      * @param {string} userData.phone - The phone number of the user.
-     * @param {string} userData.address - The physical address of the user.
-     * @param {string} userData.role - The role of the user (e.g., 'user', 'admin').
+     * @param {number} userData.addressX - The X coordinate of the user's address.
+     * @param {number} userData.addressY - The Y coordinate of the user's address.
+     * @param {string} userData.role - The role of the user (e.g., 'user', 'restaurant_owner').
      * @param {string} userData.picture - The Base64 encoded profile picture of the user.
      * @returns {Object} The newly created user object.
      */
@@ -33,7 +34,8 @@ class UserModel {
             password: userData.password,
             name: userData.name,
             phone: userData.phone,
-            address: userData.address,
+            addressX: userData.addressX,
+            addressY: userData.addressY,
             role: userData.role || 'user', // default role is 'user', can be overridden by service if needed
             picture: userData.picture
         };

@@ -4,6 +4,8 @@ import HomePage from './pages/HomePage';
 import SearchPage from './pages/SearchPage';
 import SeeAllPage from './pages/SeeAllPages';
 import AuthPage from './pages/AuthPage';
+import { AuthProvider } from './context/AuthContext';
+import  ProductTestPage from './pages/ProductTestPage';
 
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';

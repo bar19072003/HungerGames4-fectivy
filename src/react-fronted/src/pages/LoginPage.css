@@ -16,7 +16,7 @@
 }
 
 /* What happens when the user clicks inside the input (Focus) */
-.login-dark-input:focus {
+.login-dark-input:focus {   
     background-color: rgba(255, 255, 255, 0.08) !important;
     border-color: #009de0 !important; /* Highlight with Wolt blue */
     box-shadow: 0 0 0 0.2rem rgba(0, 157, 224, 0.25) !important; /* Soft blue glow */
