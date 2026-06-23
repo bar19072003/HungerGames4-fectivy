@@ -15,22 +15,24 @@ import 'bootstrap/dist/css/bootstrap.min.css';
  */
 function App() {
   return (
-    <Router>
-      <Routes>
-        
-        <Route path="/login" element={<AuthPage />} />
-        <Route path="/register" element={<AuthPage />} />
+    <AuthProvider>
+      <Router>
+        <Routes>
+          
+          <Route path="/login" element={<AuthPage />} />
+          <Route path="/register" element={<AuthPage />} />
 
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/search/:query" element={<SearchPage />} />
-          <Route path="/see-all/:type" element={<SeeAllPage />} />
-        </Route>
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/search/:query" element={<SearchPage />} />
+            <Route path="/see-all/:type" element={<SeeAllPage />} />
+          </Route>
 
-        <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
 
-      </Routes>
-    </Router> 
+        </Routes>
+      </Router> 
+    </AuthProvider>
   );
 }
 

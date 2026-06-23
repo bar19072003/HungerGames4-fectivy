@@ -32,7 +32,7 @@ class AuthController {
         // 1. Create the payload (the data we want to encode inside the token)
         const payload = {
             id: userId,
-            role: userRole
+            role: userRole  
         };
 
         // 2. Sign the token with a secret key and set an expiration time - 24 hours

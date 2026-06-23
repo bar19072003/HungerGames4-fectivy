@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 import './Navbar.css';
 
 function Navbar() {
+  const { logout } = useContext(AuthContext);
   // State to toggle mobile menu collapse/expand behavior
   const [isOpen, setIsOpen] = useState(false);
   
@@ -27,7 +29,14 @@ function Navbar() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    if (logout) {
+      logout();
+    } else {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userToken');
+      localStorage.removeItem('jwt_token');
+      localStorage.removeItem('user_id');
+    }
     navigate('/login');
   } 
 

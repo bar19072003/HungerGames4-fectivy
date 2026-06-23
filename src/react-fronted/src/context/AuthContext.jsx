@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
      * Looks into localStorage for a JWT token and user ID to restore the session.
      */
     useEffect(() => {
-        const token = localStorage.getItem('jwt_token');
+        const token = localStorage.getItem('jwt_token') || localStorage.getItem('token') || localStorage.getItem('userToken');
         const userId = localStorage.getItem('user_id');
 
         if (token && userId) {
@@ -40,6 +40,8 @@ export const AuthProvider = ({ children }) => {
      */
     const login = (userData) => {
         localStorage.setItem('jwt_token', userData.authorization);
+        localStorage.setItem('token', userData.authorization);
+        localStorage.setItem('userToken', userData.authorization);
         localStorage.setItem('user_id', userData.user_id);
         setCurrentUser({ id: userData.user_id, token: userData.authorization });
     };
@@ -50,6 +52,8 @@ export const AuthProvider = ({ children }) => {
      */
     const logout = () => {
         localStorage.removeItem('jwt_token');
+        localStorage.removeItem('token');
+        localStorage.removeItem('userToken');
         localStorage.removeItem('user_id');
         setCurrentUser(null);
     };
