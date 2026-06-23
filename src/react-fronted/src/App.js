@@ -1,31 +1,37 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import MainLayout from './layouts/MainLayout';
+import HomePage from './pages/HomePage';
+import SearchPage from './pages/SearchPage';
+import SeeAllPage from './pages/SeeAllPages';
 import AuthPage from './pages/AuthPage';
 import { AuthProvider } from './context/AuthContext';
 import  ProductTestPage from './pages/ProductTestPage';
 
+import './index.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 /**
  * Main Application Component.
  * Handles the routing and global layout of the application.
  */
 function App() {
-    return (
-        <AuthProvider>
-            <Router>
-                <Routes>
-                    {/* Product Modal Fictitious Test Page (Entry Point) */}
-                    <Route path="/product-test" element={<ProductTestPage />} />
+  return (
+    <Router>
+      <Routes>
+        
+        <Route path="/login" element={<AuthPage />} />
+        <Route path="/register" element={<AuthPage />} />
 
-                    {/* Routes for login and registration with smooth transitions */}
-                    <Route path="/login" element={<AuthPage />} />
-                    <Route path="/register" element={<AuthPage />} />
-                    
-                    {/* Redirect any unknown route or the root route directly to the product test page */}
-                    <Route path="*" element={<Navigate to="/product-test" replace />} />
-                </Routes>
-            </Router>
-        </AuthProvider>
-    );
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/search/:query" element={<SearchPage />} />
+          <Route path="/see-all/:type" element={<SeeAllPage />} />
+        </Route>
+
+        <Route path="*" element={<Navigate to="/login" replace />} />
+
+      </Routes>
+    </Router> 
+  );
 }
 
 export default App;
