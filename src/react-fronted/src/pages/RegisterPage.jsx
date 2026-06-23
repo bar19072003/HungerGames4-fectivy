@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation , useNavigate } from 'react-router-dom';
-import { Form, Button, Container, Alert, OverlayTrigger, Popover } from 'react-bootstrap';
+import { Form, Button, Container, Alert, OverlayTrigger, Popover, Row, Col } from 'react-bootstrap';
 import { registerUser } from '../services/createUserService';
 import '../WoltTheme.css';
 import './LoginPage.css'; // Reusing the same core styles
@@ -21,7 +21,8 @@ const RegisterPage = () => {
     const [verifyPassword, setVerifyPassword] = useState('');
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
-    const [address, setAddress] = useState('');
+    const [addressX, setAddressX] = useState('');
+    const [addressY, setAddressY] = useState('');
     const [picture, setPicture] = useState(null);
 
     // UI and Validation states
@@ -93,14 +94,14 @@ const RegisterPage = () => {
 
         try {
             // Build the user data object
-            const userData = { username, password, name, phone, address };
+            const userData = { username, password, name, phone, addressX, addressY };
             
             // Call the service
             await registerUser(userData, picture);
             
             console.log("Registration successful!");
-            // Redirect to login page upon successful registration
-            navigate('/login' ,  { state: { from: location.state?.from || '/homePage' } });
+            // Redirect to login page upon successful registration and forward state
+            navigate('/login', { state: location.state });
         } catch (err) {
             // Displays server errors (like duplicate username) to the user
             setError(err.message);
@@ -137,7 +138,7 @@ const RegisterPage = () => {
                 <button 
                     type="button" 
                     className="back-to-login-btn position-absolute start-0"
-                    onClick={() => navigate('/login', { state: { from: location.state?.from } })}
+                    onClick={() => navigate('/login', { state: location.state })}
                     aria-label="Back to login"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
@@ -218,15 +219,32 @@ const RegisterPage = () => {
                     </Form.Group>
 
 
-                    <Form.Group className="mb-3" controlId="formAddress">
-                        <Form.Label className="text-white">Address</Form.Label>
-                        <Form.Control 
-                                    type="text"
-                                    className="login-dark-input" 
-                                    value={address} onChange={(e) => setAddress(e.target.value)} 
-                                    required />
-                        <Form.Control.Feedback type="invalid">Address is required</Form.Control.Feedback>
-                    </Form.Group>
+                    <Row className="mb-3">
+                        <Col md={6}>
+                            <Form.Group controlId="formAddressX">
+                                <Form.Label className="text-white">Address X</Form.Label>
+                                <Form.Control 
+                                            type="number"
+                                            step="any"
+                                            className="login-dark-input" 
+                                            value={addressX} onChange={(e) => setAddressX(e.target.value)} 
+                                            required />
+                                <Form.Control.Feedback type="invalid">Address X is required</Form.Control.Feedback>
+                            </Form.Group>
+                        </Col>
+                        <Col md={6}>
+                            <Form.Group controlId="formAddressY">
+                                <Form.Label className="text-white">Address Y</Form.Label>
+                                <Form.Control 
+                                            type="number"
+                                            step="any"
+                                            className="login-dark-input" 
+                                            value={addressY} onChange={(e) => setAddressY(e.target.value)} 
+                                            required />
+                                <Form.Control.Feedback type="invalid">Address Y is required</Form.Control.Feedback>
+                            </Form.Group>
+                        </Col>
+                    </Row>
 
 
                    {/* Profile Picture Avatar Upload */}

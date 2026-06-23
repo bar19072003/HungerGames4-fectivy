@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { login as loginApi } from '../services/authService';
 import { useLocation , useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 // Import the ready-made components from react-bootstrap
 import { Form, Button, Container, Alert } from 'react-bootstrap';
@@ -18,12 +19,15 @@ const LoginPage = () => {
     const [error, setError] = useState('');
     const [validated, setValidated] = useState(false);
 
+    // Consume the AuthContext
+    const { login } = useContext(AuthContext);
 
    //React Router's navigation hook to programmatically navigate to different routes.
    const navigate = useNavigate();
    const location = useLocation();
 
    const targetPath = location.state?.from || '/homePage'; // Default to home page if no specific target path is provided
+   const relayMessage = location.state?.message; // Extract relay message from state
 
     /**
      * Handles the form submission event.
@@ -46,8 +50,10 @@ const LoginPage = () => {
 
         try {
             const data = await loginApi(username, password);
-            localStorage.setItem('jwt_token', data.authorization);
-            localStorage.setItem('user_id', data.user_id);
+            
+            // Use the global context login function
+            login(data);
+            
             console.log("Login successful!");
             navigate(targetPath, { replace: true }); // Navigate to the target path after successful login
         } catch (err) {
@@ -60,6 +66,13 @@ const LoginPage = () => {
             {/* Main Title matching the Wolt design */}
             <h1 className="text-white text-center mb-4 fw-bold">HungerGames</h1>
             <h4 className="text-white text-center mb-4 fw-bold">Login to your Hunger Games account</h4>
+            
+            {/* Display relayed informational messages if they exist */}
+            {relayMessage && (
+                <Alert variant="info" className="w-100 text-center bg-dark text-info border-info">
+                    {relayMessage}
+                </Alert>
+            )}
             
             {error && <Alert variant="danger" className="w-100 text-center ">
                 {error}
@@ -106,7 +119,7 @@ const LoginPage = () => {
                 </Button>
 
                 <Button type="button" className="w-100 mt-3 secondary-btn"
-                onClick={() => navigate('/register', { state: { from: targetPath } })}>
+                onClick={() => navigate('/register', { state: location.state })}>
                    Create Account
                 </Button>
             </Form>

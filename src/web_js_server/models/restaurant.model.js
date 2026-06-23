@@ -20,6 +20,7 @@ class RestaurantModel {
      * @param {string} restaurantData.address - The physical address of the restaurant.
      * @param {string} restaurantData.phone - The contact phone number for the restaurant.
      * @param {boolean} restaurantData.kosher - Kosher certification status.
+     * @param {string} restaurantData.ownerId - The UUID of the user who owns the restaurant.
      * @returns {Object} The newly created restaurant object.
      */
     createRestaurant(restaurantData) {
@@ -31,6 +32,7 @@ class RestaurantModel {
             address: restaurantData.address,
             phone: restaurantData.phone,
             kosher: restaurantData.kosher,
+            ownerId: restaurantData.ownerId,
             working_hours: restaurantData.working_hours,
             rating: 0, // Initial rating is set to 0
 

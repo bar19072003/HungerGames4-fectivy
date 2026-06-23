@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router({ mergeParams: true });
 const productController = require('../controllers/product.controller');
-const { requireAuth, optionalAuth, requireAdmin }  = require('../middlewares/auth.middleware');
+const { requireAuth, optionalAuth, requireRestaurantOwner, requireRestaurantOwnership }  = require('../middlewares/auth.middleware');
 
 /**
  * Product Routes.
@@ -10,12 +10,12 @@ const { requireAuth, optionalAuth, requireAdmin }  = require('../middlewares/aut
  */
 
 router.route('/')
-    .get(productController.getProductsByRestaurant.bind(productController)) // evryone can view products of a restaurant
-    .post(requireAuth, requireAdmin, productController.createProduct.bind(productController)); // only admins can add products to a restaurant
+    .get(productController.getProductsByRestaurant.bind(productController)) // everyone can view products of a restaurant
+    .post(requireAuth, requireRestaurantOwner, requireRestaurantOwnership, productController.createProduct.bind(productController)); // only the specific restaurant owner can add products
 
 router.route('/:pId')
-    .get(optionalAuth, productController.getProductById.bind(productController))  // evryone can view a product, but if they are authenticated we will send them a notification in the background about the product they viewed
-    .patch(optionalAuth, requireAdmin, productController.updateProduct.bind(productController)) // only admins can update products of a restaurant
-    .delete(optionalAuth, requireAdmin, productController.deleteProduct.bind(productController)); // only admins can delete products of a restaurant
+    .get(optionalAuth, productController.getProductById.bind(productController))  // everyone can view a product, but if they are authenticated we will send them a notification in the background about the product they viewed
+    .patch(requireAuth, requireRestaurantOwner, requireRestaurantOwnership, productController.updateProduct.bind(productController)) // only the specific restaurant owner can update products
+    .delete(requireAuth, requireRestaurantOwner, requireRestaurantOwnership, productController.deleteProduct.bind(productController)); // only the specific restaurant owner can delete products
 
 module.exports = router;
