@@ -42,8 +42,23 @@ class AuthController {
             { expiresIn: '24h' }
         );
 
+        const user = userService.getUserById(userId);
+
         // Returns the token with 201
-        return res.status(201).json({ authorization: token , user_id : userId });
+        return res.status(201).json({ 
+            authorization: token, 
+            user_id: userId,
+            user: {
+                id: user.id,
+                username: user.username,
+                name: user.name,
+                phone: user.phone,
+                addressX: user.addressX,
+                addressY: user.addressY,
+                role: user.role,
+                picture: user.picture
+            }
+        });
     }
 }
 

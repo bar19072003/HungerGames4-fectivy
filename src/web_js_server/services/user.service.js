@@ -95,6 +95,24 @@ class UserService {
         const user = this.getUserById(userId);
         return user ? user.role : null;
     }
+
+    /**
+     * Validates and updates user profile data.
+     * @param {string} userId - The user ID.
+     * @param {Object} updatedFields - The fields to update.
+     * @returns {Object} The updated user.
+     * @throws {Error} If validation fails or user is not found.
+     */
+    updateUser(userId, updatedFields) {
+        if (!this._validateUserData(updatedFields, true)) {
+            throw new Error('Invalid user update data');
+        }
+        const updated = userModel.updateUser(userId, updatedFields);
+        if (!updated) {
+            throw new Error('User not found');
+        }
+        return updated;
+    }
 }
 
 module.exports = new UserService();

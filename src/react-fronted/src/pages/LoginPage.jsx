@@ -26,7 +26,7 @@ const LoginPage = () => {
    const navigate = useNavigate();
    const location = useLocation();
 
-   const targetPath = location.state?.from || '/homePage'; // Default to home page if no specific target path is provided
+   const targetPath = location.state?.from || '/home'; // Default to home page if no specific target path is provided
    const relayMessage = location.state?.message; // Extract relay message from state
 
     /**

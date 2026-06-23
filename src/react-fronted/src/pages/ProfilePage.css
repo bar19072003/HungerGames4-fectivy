@@ -1,0 +1,108 @@
+/* Specific CSS styles for the Profile Page */
+
+.profile-form-width {
+    width: 100%;
+    max-width: 450px; 
+}
+
+/* =========================================
+   Profile Avatar Upload & View Styling
+   ========================================= */
+
+.profile-avatar-label {
+    display: inline-block;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+/* Readonly vs Editable mode layout states */
+.profile-avatar-label.readonly {
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    cursor: default;
+}
+
+.profile-avatar-label.editable {
+    border: 2px dashed rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+}
+
+.profile-avatar-label.editable:hover {
+    border-color: #00c2e8;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Rounded avatar image styling */
+.profile-avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+}
+
+/* Avatar placeholder box */
+.profile-avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    position: relative;
+}
+
+.profile-default-icon {
+    width: 60px;
+    height: 60px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Small edit (pencil) badge on the bottom-right corner */
+.profile-edit-badge {
+    position: absolute;
+    bottom: 0;
+    right: 5px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid #1a1b1f; /* Matches dark body color to simulate border spacing cutout */
+    transition: transform 0.2s ease;
+}
+
+.pencil-svg-icon {
+    width: 16px;
+    height: 16px;
+    color: #00c2e8; /* Wolt-themed blue color for the pencil icon */
+}
+
+.profile-avatar-label.editable:hover .profile-edit-badge {
+    transform: scale(1.1); /* Enlarge badge button on hover */
+}
+
+/* Cancel Button design to fit in dark theme */
+.cancel-btn {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.cancel-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.cancel-btn:focus, .cancel-btn:active {
+    outline: none;
+    box-shadow: none;
+}

@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage';
 import SearchPage from './pages/SearchPage';
 import SeeAllPage from './pages/SeeAllPages';
 import AuthPage from './pages/AuthPage';
+import ProfilePage from './pages/ProfilePage';
 import { AuthProvider } from './context/AuthContext';
 import  ProductTestPage from './pages/ProductTestPage';
 
@@ -24,8 +25,10 @@ function App() {
 
           <Route element={<MainLayout />}>
             <Route path="/" element={<HomePage />} />
+            <Route path="/home" element={<HomePage />} />
             <Route path="/search/:query" element={<SearchPage />} />
             <Route path="/see-all/:type" element={<SeeAllPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/login" replace />} />

@@ -76,6 +76,41 @@ class UserController {
         return res.status(200).json(user);
     }
 
+    /**
+     * Updates the profile of the authenticated user.
+     * @param {Object} req - Express request object.
+     * @param {Object} res - Express response object.
+     */
+    updateProfile(req, res) {
+        const userId = req.user.id;
+        const { name, phone, picture, addressX, addressY } = req.body;
+
+        const updatedFields = {};
+        if (name !== undefined) updatedFields.name = name;
+        if (phone !== undefined) updatedFields.phone = phone;
+        if (picture !== undefined) updatedFields.picture = picture;
+        if (addressX !== undefined) updatedFields.addressX = parseFloat(addressX);
+        if (addressY !== undefined) updatedFields.addressY = parseFloat(addressY);
+
+        try {
+            const updatedUser = userService.updateUser(userId, updatedFields);
+            
+            // Return updated user details (excluding password)
+            return res.status(200).json({
+                id: updatedUser.id,
+                username: updatedUser.username,
+                name: updatedUser.name,
+                phone: updatedUser.phone,
+                addressX: updatedUser.addressX,
+                addressY: updatedUser.addressY,
+                role: updatedUser.role,
+                picture: updatedUser.picture
+            });
+        } catch (error) {
+            return res.status(400).json({ error: error.message });
+        }
+    }
+
 }
 
 // Export a singleton instance of the controller

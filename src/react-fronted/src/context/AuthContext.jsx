@@ -23,10 +23,17 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const token = localStorage.getItem('jwt_token') || localStorage.getItem('token') || localStorage.getItem('userToken');
         const userId = localStorage.getItem('user_id');
+        const userName = localStorage.getItem('user_name');
+        const userPicture = localStorage.getItem('user_picture');
 
         if (token && userId) {
-            // Restore session if both token and user ID exist
-            setCurrentUser({ id: userId, token: token });
+            // Restore session if token and user ID exist
+            setCurrentUser({ 
+                id: userId, 
+                token: token,
+                name: userName || null,
+                picture: userPicture || null
+            });
         }
     }, []);
 
@@ -37,13 +44,30 @@ export const AuthProvider = ({ children }) => {
      * @param {Object} userData - The authentication data returned from the API.
      * @param {string} userData.authorization - The JWT token.
      * @param {string} userData.user_id - The unique user ID.
+     * @param {Object} [userData.user] - The lightweight user object.
      */
     const login = (userData) => {
         localStorage.setItem('jwt_token', userData.authorization);
         localStorage.setItem('token', userData.authorization);
         localStorage.setItem('userToken', userData.authorization);
         localStorage.setItem('user_id', userData.user_id);
-        setCurrentUser({ id: userData.user_id, token: userData.authorization });
+        
+        let userDetails = null;
+        if (userData.user) {
+            userDetails = userData.user;
+            localStorage.setItem('user_name', userDetails.name || '');
+            localStorage.setItem('user_picture', userDetails.picture || '');
+        }
+
+        setCurrentUser({ 
+            id: userData.user_id, 
+            token: userData.authorization,
+            name: userDetails?.name || null,
+            picture: userDetails?.picture || null,
+            role: userDetails?.role || null,
+            addressX: userDetails?.addressX || null,
+            addressY: userDetails?.addressY || null
+        });
     };
 
     /**
@@ -55,11 +79,31 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('token');
         localStorage.removeItem('userToken');
         localStorage.removeItem('user_id');
+        localStorage.removeItem('user_name');
+        localStorage.removeItem('user_picture');
         setCurrentUser(null);
     };
 
+    /**
+     * Dynamically updates the active user session details in state and localStorage.
+     * @param {Object} updatedFields - The fields that were modified.
+     */
+    const updateUserSession = (updatedFields) => {
+        setCurrentUser(prev => {
+            if (!prev) return null;
+            const updated = { ...prev, ...updatedFields };
+            if (updatedFields.name !== undefined) {
+                localStorage.setItem('user_name', updatedFields.name);
+            }
+            if (updatedFields.picture !== undefined) {
+                localStorage.setItem('user_picture', updatedFields.picture);
+            }
+            return updated;
+        });
+    };
+
     return (
-        <AuthContext.Provider value={{ currentUser, login, logout }}>
+        <AuthContext.Provider value={{ currentUser, login, logout, updateUserSession }}>
             {children}
         </AuthContext.Provider>
     );

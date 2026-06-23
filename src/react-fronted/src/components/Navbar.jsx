@@ -5,14 +5,14 @@ import { AuthContext } from '../context/AuthContext';
 import './Navbar.css';
 
 function Navbar() {
-  const { logout } = useContext(AuthContext);
+  const { currentUser, logout } = useContext(AuthContext);
   // State to toggle mobile menu collapse/expand behavior
   const [isOpen, setIsOpen] = useState(false);
   
   // Local state holding the live input value from the search bar
   const [typedQuery, setTypedQuery] = useState('');
 
-  const isLoggedIn = !!localStorage.getItem('token');
+  const isLoggedIn = !!currentUser || !!localStorage.getItem('token');
   
   // React Router hook for programmatic navigation
   const navigate = useNavigate();
@@ -112,6 +112,20 @@ function Navbar() {
               >
                 🛍️
               </Link>
+              {currentUser?.picture && (
+                <Link to="/profile" className="d-flex align-items-center" style={{ textDecoration: 'none' }}>
+                  <img 
+                    src={currentUser.picture} 
+                    alt="Profile" 
+                    style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #000000' }} 
+                  />
+                </Link>
+              )}
+              {currentUser?.name && (
+                <Link to="/profile" className="text-white fw-semibold text-decoration-none d-none d-md-inline small">
+                  {currentUser.name}
+                </Link>
+              )}
               <button className="btn bg-wolt-secondary text-white fw-semibold px-3 border-0" style={{ borderRadius: '20px' }} onClick={handleLogout}>
                 Log out
               </button>

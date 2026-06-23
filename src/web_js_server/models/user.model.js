@@ -10,6 +10,42 @@ class UserModel {
          * Value: User Object { id, username, password, name, phone, addressX, addressY }
          */
         this.users = new Map();
+
+        // Seed initial mock users for testing
+        this._seedMockUsers();
+    }
+
+    /**
+     * Seeds initial mock users into the database.
+     * @private
+     */
+    _seedMockUsers() {
+        const mockUser = {
+            id: 'mock-user-id-1',
+            username: 'user',
+            password: '1234',
+            name: 'Regular User',
+            phone: '0501234567',
+            addressX: 12.34,
+            addressY: 56.78,
+            role: 'user',
+            picture: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="%2300c2e8"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="20" fill="white">U</text></svg>'
+        };
+
+        const mockOwner = {
+            id: 'mock-owner-id-2',
+            username: 'admin',
+            password: '1234',
+            name: 'Restaurant Owner',
+            phone: '0507654321',
+            addressX: 34.56,
+            addressY: 78.90,
+            role: 'restaurant_owner',
+            picture: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="%23e800c2"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="20" fill="white">O</text></svg>'
+        };
+
+        this.users.set(mockUser.id, mockUser);
+        this.users.set(mockOwner.id, mockOwner);
     }
 
     /**
@@ -57,6 +93,21 @@ class UserModel {
             }
         }
         return null;
+    }
+
+    /**
+     * Updates an existing user with new field values.
+     * @param {string} id - The user ID.
+     * @param {Object} updatedFields - The fields to update.
+     * @returns {Object|null} The updated user object, or null if not found.
+     */
+    updateUser(id, updatedFields) {
+        const user = this.getUserById(id);
+        if (!user) return null;
+
+        const updatedUser = { ...user, ...updatedFields };
+        this.users.set(id, updatedUser);
+        return updatedUser;
     }
 }
 
