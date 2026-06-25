@@ -2,8 +2,7 @@ const express = require('express');
 const router = express.Router();
 const restaurantController = require('../controllers/restaurant.controller');
 const productRoutes = require('./product.routes');
-const { requireAuth, requireRestaurantOwner, requireRestaurantOwnership } = require('../middlewares/auth.middleware');
-
+const { requireAuth, optionalAuth, requireRestaurantOwner, requireRestaurantOwnership } = require('../middlewares/auth.middleware');
 router.use('/:id/products', productRoutes);
 /**
  * Restaurant Routes.
@@ -14,7 +13,7 @@ router.route('/')
     .get(restaurantController.getAllRestaurants.bind(restaurantController))
     .post(requireAuth, requireRestaurantOwner, restaurantController.createRestaurant.bind(restaurantController));
 router.route('/:id')
-    .get(restaurantController.getRestaurantById.bind(restaurantController))
+     .get(optionalAuth, restaurantController.getRestaurantById.bind(restaurantController))
     .patch(requireAuth, requireRestaurantOwner, requireRestaurantOwnership, restaurantController.updateRestaurant.bind(restaurantController))
     .delete(requireAuth, requireRestaurantOwner, requireRestaurantOwnership, restaurantController.deleteRestaurant.bind(restaurantController));
 

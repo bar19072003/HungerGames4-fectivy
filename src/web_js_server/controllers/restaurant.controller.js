@@ -1,4 +1,5 @@
 const restaurantService = require('../services/restaurant.service');
+const userModel = require('../models/user.model');
 
 /**
  * Restaurant Controller.
@@ -13,17 +14,19 @@ class RestaurantController {
 
      // Handles the creation of a new restaurant.
     createRestaurant(req, res) {
-        const { name, description, address, phone, kosher , working_hours } = req.body;
+        const { name, description, addressX, addressY, phone, kosher , working_hours } = req.body;
 
         try {
             // Create the restaurant using the service layer (validation handled by service)
             const newRestaurant = restaurantService.createRestaurant({
                 name,
                 description,
-                address,
+                addressX,
+                addressY,
                 phone,
                 kosher,
-                working_hours
+                working_hours,
+                ownerId: req.user.id
             });
 
             // Return 201 Created with the Location header pointing to the new resource
@@ -57,6 +60,17 @@ class RestaurantController {
 
         // Remove the 'products' field from the restaurant object before sending the response
         const { products, ...restaurantWithoutProducts } = resById;
+
+        // Calculate estimated delivery time if user is authenticated
+        if (req.user) {
+            const user = userModel.getUserById(req.user.id);
+            if (user && typeof user.addressX === 'number' && typeof user.addressY === 'number') {
+                const dx = user.addressX - resById.addressX;
+                const dy = user.addressY - resById.addressY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                restaurantWithoutProducts.estimatedDeliveryTime = Math.ceil(distance * 5) + 15;
+            }
+        }
 
         return res.status(200).json(restaurantWithoutProducts);
     }

@@ -23,6 +23,7 @@ const RegisterPage = () => {
     const [phone, setPhone] = useState('');
     const [addressX, setAddressX] = useState('');
     const [addressY, setAddressY] = useState('');
+    const [role, setRole] = useState('user');
     const [picture, setPicture] = useState(null);
 
     // UI and Validation states
@@ -94,7 +95,7 @@ const RegisterPage = () => {
 
         try {
             // Build the user data object
-            const userData = { username, password, name, phone, addressX, addressY };
+            const userData = { username, password, name, phone, addressX, addressY, role };
             
             // Call the service
             await registerUser(userData, picture);
@@ -245,6 +246,19 @@ const RegisterPage = () => {
                             </Form.Group>
                         </Col>
                     </Row>
+
+                    <Form.Group className="mb-3" controlId="formRole">
+                        <Form.Label className="text-white">Account Type</Form.Label>
+                        <Form.Select 
+                            className="login-dark-input text-white" 
+                            style={{ backgroundColor: '#1e1e1e', borderColor: '#333' }}
+                            value={role} 
+                            onChange={(e) => setRole(e.target.value)} 
+                            required>
+                            <option value="user">Regular User</option>
+                            <option value="restaurant_owner">Restaurant Owner</option>
+                        </Form.Select>
+                    </Form.Group>
 
 
                    {/* Profile Picture Avatar Upload */}

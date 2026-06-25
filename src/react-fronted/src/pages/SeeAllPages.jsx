@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import RestaurantCard from '../components/RestaurantCard';
 
 function SeeAllPage() {
@@ -7,7 +7,6 @@ function SeeAllPage() {
   const { type } = useParams(); 
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   // 2. React Router Trigger: Fetches data asynchronously whenever the dynamic sub-category type shifts
   useEffect(() => {
@@ -34,7 +33,14 @@ function SeeAllPage() {
         });
         
         const data = await response.json();
-        setRestaurants(data); // Expects the backend array to arrive pre-sorted and capped
+        const processedData = data.map(res => ({
+          ...res,
+          image: res.image || "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500",
+          rating: res.rating || "8.0",
+          distance: res.distance || "1.0"
+        }));
+        
+        setRestaurants(processedData); // Expects the backend array to arrive pre-sorted and capped
         setLoading(false);
       } catch (error) {
         console.error("Failed to fetch from server, rendering empty grid state:", error);

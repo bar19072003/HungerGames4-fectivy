@@ -6,7 +6,7 @@ import SeeAllPage from './pages/SeeAllPages';
 import AuthPage from './pages/AuthPage';
 import ProfilePage from './pages/ProfilePage';
 import { AuthProvider } from './context/AuthContext';
-import  ProductTestPage from './pages/ProductTestPage';
+import RestaurantPage from './pages/RestaurantPage';
 
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -30,6 +30,8 @@ function App() {
             <Route path="/see-all/:type" element={<SeeAllPage />} />
             <Route path="/profile" element={<ProfilePage />} />
           </Route>
+
+          <Route path="/restaurant/:id" element={<RestaurantPage />} />
 
           <Route path="*" element={<Navigate to="/login" replace />} />
 

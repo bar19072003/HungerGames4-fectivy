@@ -7,7 +7,14 @@ const searchRoutes = require('./routes/search.routes');
 const tokenRoutes = require('./routes/token.routes');
 const orderRoutes = require('./routes/order.routes');
 const tcpClient = require('./client/tcpClient');
+const restaurantModel = require('./models/restaurant.model');
+const productModel = require('./models/product.model');
 
+
+const { seedMockData } = require('./mockData');
+
+// Seed all initial data
+seedMockData();
 
 app.use(cors());
 app.use(express.json());

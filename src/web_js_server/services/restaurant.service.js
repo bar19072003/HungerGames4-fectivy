@@ -7,7 +7,7 @@ const { v4: uuidv4 } = require('uuid');
  * Handles the business logic and ID generation for restaurant operations.
  */
 class RestaurantService {
-    
+
     /**
      * Validates restaurant data for creation or update operations.
      * @param {Object} data - The restaurant data to validate.
@@ -20,7 +20,7 @@ class RestaurantService {
             return false;
         }
 
-        const requiredFields = ['name', 'address', 'phone', 'kosher', 'working_hours'];
+        const requiredFields = ['name', 'addressX', 'addressY', 'phone', 'kosher', 'working_hours'];
         const optionalFields = ['description'];
         const allowedFields = [...requiredFields, ...optionalFields];
 
@@ -40,7 +40,11 @@ class RestaurantService {
                     if (typeof data[field] !== 'string' && typeof data[field] !== 'object') {
                         return false;
                     }
-                } else if (['name', 'address', 'phone'].includes(field)) {
+                } else if (['addressX', 'addressY'].includes(field)) {
+                    if (typeof data[field] !== 'number') {
+                        return false;
+                    }
+                } else if (['name', 'phone'].includes(field)) {
                     if (typeof data[field] !== 'string' || data[field].trim() === '') {
                         return false;
                     }
@@ -66,7 +70,11 @@ class RestaurantService {
                     if (typeof data[field] !== 'string' && typeof data[field] !== 'object') {
                         return false;
                     }
-                } else if (['name', 'address', 'phone', 'description'].includes(field)) {
+                } else if (['addressX', 'addressY'].includes(field)) {
+                    if (typeof data[field] !== 'number') {
+                        return false;
+                    }
+                } else if (['name', 'phone', 'description'].includes(field)) {
                     if (typeof data[field] !== 'string') {
                         return false;
                     }
@@ -79,7 +87,7 @@ class RestaurantService {
 
         return true;
     }
-    
+
     /**
      * Creates a new restaurant with validation.
      * @param {Object} restaurantData - The restaurant data to create.
@@ -89,7 +97,7 @@ class RestaurantService {
     createRestaurant(restaurantData) {
         // Validate restaurant data before creation
         if (!this._validateRestaurantData(restaurantData, false)) {
-            throw new Error('Invalid restaurant data: name, address, phone, kosher, and working_hours are required');
+            throw new Error('Invalid restaurant data: name, addressX, addressY, phone, kosher, and working_hours are required');
         }
 
         // Generate a unique UUID for the new restaurant
@@ -98,18 +106,18 @@ class RestaurantService {
         const newRes = restaurantModel.createRestaurant({id , ...restaurantData});
         return newRes;
     }
-        
+
     // TODO: Implement getAllRestaurants()
     getAllRestaurants() {
         const restaurantsMap = restaurantModel.getAllRestaurants();
         // Convert the Map to Array and return it.
         return Array.from(restaurantsMap.values());
     }
-    
+
     getRestaurantById(id) {
 		return restaurantModel.getRestaurantById(id);
 	}
-    
+
     /**
      * Updates an existing restaurant with validation.
      * @param {string} id - The restaurant ID to update.
@@ -132,7 +140,7 @@ class RestaurantService {
         const mergedRestaurant = { ...resForUpdate };
 
         // Define a strict whitelist of fields the user is allowed to modify
-        const allowedUpdates = ['name', 'description', 'address', 'phone', 'kosher', 'working_hours'];
+        const allowedUpdates = ['name', 'description', 'addressX', 'addressY', 'phone', 'kosher', 'working_hours'];
 
         // Iterate and apply only the permitted and provided fields
         allowedUpdates.forEach(field => {
@@ -145,8 +153,8 @@ class RestaurantService {
         restaurantModel.updateRestaurant(id, mergedRestaurant);
         return true;
     }
-	
-	
+
+
     deleteRestaurant(id) {
 		if (!this.getRestaurantById(id)) {
 			return false

@@ -44,7 +44,7 @@ export const registerUser = async (userData, imageFile) => {
         phone: userData.phone,
         addressX: parseFloat(userData.addressX),
         addressY: parseFloat(userData.addressY),
-        role: 'user', // Forced role
+        role: userData.role || 'user',
         picture: base64Picture
     };
 

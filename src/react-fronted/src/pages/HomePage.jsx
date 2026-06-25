@@ -39,17 +39,20 @@ function HomePage() {
         });
         
         const data = await response.json();
-        setRestaurants(data);
+        
+        // Ensure data has defaults for frontend rendering if backend doesn't provide them
+        const processedData = data.map(res => ({
+          ...res,
+          image: res.image || "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500", // Default image
+          rating: res.rating || "8.0",
+          distance: res.distance || "1.0"
+        }));
+
+        setRestaurants(processedData);
         setLoading(false);    
       } catch (error) {
-        console.error("Failed to fetch restaurants, loading fallback data:", error);
-        
-        // DEV FALLBACK MOCK DATA: Used for manual frontend testing when the backend server is offline
-        const fallbackMock = [
-          { id: 1, name: "Pizza Papa John's", description: "American Pizza", rating: "7.8", distance: "1.2", image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500" },
-          { id: 2, name: "Burger Station", description: "Premium Burgers", rating: "8.5", distance: "2.4", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500" }
-        ];
-        setRestaurants(fallbackMock);
+        console.error("Failed to fetch restaurants:", error);
+        setRestaurants([]);
         setLoading(false);
       }
     };
@@ -64,10 +67,7 @@ function HomePage() {
     }
   };
 
-  // Maps all un-sorted raw restaurant entries into a standard card array
-  const restaurantItems = restaurants.map((restaurant, index) => (
-    <RestaurantCard key={index} {...restaurant} />
-  ));
+
 
   // Client-side computation: Sorts items descending by rating and extracts top 5 entries
   const topRatedItems = [...restaurants]
