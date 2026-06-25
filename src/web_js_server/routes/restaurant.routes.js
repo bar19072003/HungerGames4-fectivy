@@ -11,11 +11,13 @@ router.use('/:id/products', productRoutes);
  */
 
 router.route('/')
-    .get(restaurantController.getAllRestaurants.bind(restaurantController))
+    .get(restaurantController.getRestaurantsList.bind(restaurantController))
     .post(requireAuth, requireRestaurantOwner, restaurantController.createRestaurant.bind(restaurantController));
 router.route('/:id')
     .get(restaurantController.getRestaurantById.bind(restaurantController))
     .patch(requireAuth, requireRestaurantOwner, requireRestaurantOwnership, restaurantController.updateRestaurant.bind(restaurantController))
     .delete(requireAuth, requireRestaurantOwner, requireRestaurantOwnership, restaurantController.deleteRestaurant.bind(restaurantController));
-
+router.route('/category/:category')
+    .get(restaurantController.getRestaurantsByCategory.bind(restaurantController));
+    
 module.exports = router;

@@ -14,13 +14,17 @@ function SearchPage() {
     const fetchSearchResults = async () => {
       setLoading(true);
       try {
-        const token = localStorage.getItem('userToken');
-        
+        const savedLocation = localStorage.getItem('userLocation');
         // Dynamic endpoint syntax packing the encoded text value directly inside the path param
-        const response = await fetch(`http://localhost:3000/api/search/${encodeURIComponent(query)}`, {
+        let backendUrl = `http://localhost:3000/api/search/${encodeURIComponent(query)}`;
+        if(savedLocation) {
+          const { lat, lng } = JSON.parse(savedLocation);
+          backendUrl += `?lat=${lat}&lng=${lng}`;
+        }
+
+        const response = await fetch(backendUrl, {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         });
@@ -54,11 +58,14 @@ function SearchPage() {
   }, [query]); // CRITICAL: Forces full UI re-fetch cycle whenever dynamic keyword changes
 
   // 3. UI Component Mapping: Renders 4 columns per row on large desktop displays (col-lg-3)
-  const restaurantGridItems = searchResults.restaurants.map((restaurant, index) => (
-    <div className="col-12 col-md-6 col-lg-3" key={`res-${index}`}>
-      <RestaurantCard {...restaurant} />
-    </div>
-  ));
+  const restaurantGridItems = searchResults.restaurants.map((restaurant, index) => {
+    const { distance, ...restaurantWithoutDistance } = restaurant;
+    return (
+      <div className="col-12 col-md-6 col-lg-3" key={`res-${index}`}>
+        <RestaurantCard {...restaurantWithoutDistance} />
+      </div>
+    );
+  });
 
   // 4. UI Component Mapping: Renders 2 columns per row for specialized product cards (col-md-6)
   const productGridItems = searchResults.products.map((product, index) => (

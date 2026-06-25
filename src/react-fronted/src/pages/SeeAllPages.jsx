@@ -15,20 +15,24 @@ function SeeAllPage() {
       setLoading(true);
       
       try {
-        const token = localStorage.getItem('userToken');
+        const savedLocation = localStorage.getItem('userLocation');
+
+        let backendUrl = 'http://localhost:3000/api/restaurants';
         
-        // Maps Frontend parameters cleanly to Backend query configurations
-        let backendUrl = 'http://localhost:3000/api/restaurants?limit=10';
         if (type === 'near-you') {
-          backendUrl += '&sortBy=distance';
+          if (savedLocation) {
+            const { lat, lng } = JSON.parse(savedLocation);
+            backendUrl += `?sort=nearby&lat=${lat}&lng=${lng}`;
+          } else {
+            backendUrl += `?sort=nearby`; 
+          }
         } else if (type === 'top-rated') {
-          backendUrl += '&sortBy=rating';
+          backendUrl += `?sort=topRated`;
         }
 
         const response = await fetch(backendUrl, {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         });
@@ -38,6 +42,7 @@ function SeeAllPage() {
         setLoading(false);
       } catch (error) {
         console.error("Failed to fetch from server, rendering empty grid state:", error);
+        setRestaurants([]); // Fallback to an empty array if the fetch fails
         setLoading(false);
       }
     };

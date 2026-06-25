@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
@@ -12,12 +12,40 @@ function Navbar() {
   // Local state holding the live input value from the search bar
   const [typedQuery, setTypedQuery] = useState('');
 
-  const isLoggedIn = !!localStorage.getItem('token');
+  // Flag to determine if the user is logged in based on the presence of a token in localStorage
+  const isLoggedIn = true;
   
   // React Router hook for programmatic navigation
   const navigate = useNavigate();
 
+  // Hover state for the "My Orders" button to provide visual feedback
   const [isOrderHovered, setIsOrderHovered] = useState(false);
+
+  // Modal state to control the visibility of the location selection modal
+  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+
+  // State to hold the user's current location, initialized from localStorage if available
+  const [userLocation, setUserLocation] = useState(null);
+
+  useEffect(() => {
+    const savedLoc = localStorage.getItem('userLocation');
+    if (savedLoc) {
+      try {
+        setUserLocation(JSON.parse(savedLoc));
+      } catch (e) {
+        console.error("Error parsing user location from localStorage", e);
+      }
+    }
+}, [isLoggedIn]);
+
+  const [tempLat, setTempLat] = useState('');
+  const [tempLng, setTempLng] = useState('');
+
+  const handleOpenModal = () => {
+    setTempLat(userLocation ? userLocation.lat : '');
+    setTempLng(userLocation ? userLocation.lng : '');
+    setIsLocationModalOpen(true);
+  }
 
   // Intercepts form submission to handle routing independently
   const handleSubmit = (e) => {
@@ -40,6 +68,17 @@ function Navbar() {
     navigate('/login');
   } 
 
+  const handleSaveLocation = (e) => {
+    e.preventDefault();
+    if (tempLat && tempLng) {
+      const newLocation = { lat: parseFloat(tempLat), lng: parseFloat(tempLng) };
+      setUserLocation(newLocation);
+      localStorage.setItem('userLocation', JSON.stringify(newLocation));
+      setIsLocationModalOpen(false);
+      window.dispatchEvent(new Event('locationChanged')); // Dispatch a custom event to notify other components of the location change
+    }
+  };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-wolt-secondary shadow-sm py-2 fixed-top">
       <div className="container-fluid">
@@ -49,6 +88,14 @@ function Navbar() {
           Wolt
         </Link>
         
+        <button 
+            className="btn btn-link text-white-50 text-decoration-none small p-0 ms-2"
+            onClick={handleOpenModal}
+            style={{ fontSize: '0.85rem' }}
+          >
+            📍 {userLocation ? `${userLocation.lat.toFixed(2)}, ${userLocation.lng.toFixed(2)}` : 'Set Location'}
+        </button>
+
         {/* Mobile Hamburger Trigger: Toggles the 'isOpen' state on small viewports */}
         <button 
           className="navbar-toggler" 
@@ -130,6 +177,44 @@ function Navbar() {
 
         </div>
       </div>
+
+      {isLocationModalOpen && (
+        <div className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center" style={{ backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 1050 }}>
+          <div className="bg-wolt-secondary text-white p-4 rounded-4 shadow-lg" style={{ width: '100%', maxWidth: '350px' }}>
+            <h5 className="fw-bold mb-3">Change Delivery Location</h5>
+            <form onSubmit={handleSaveLocation}>
+              <div className="mb-3">
+                <label className="form-label small text-white-50">Latitude</label>
+                <input 
+                  type="number" 
+                  step="any"
+                  className="form-control border-0 text-white" 
+                  style={{ backgroundColor: '#292E45' }}
+                  value={tempLat} 
+                  onChange={(e) => setTempLat(e.target.value)} 
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label small text-white-50">Longitude</label>
+                <input 
+                  type="number" 
+                  step="any"
+                  className="form-control border-0 text-white" 
+                  style={{ backgroundColor: '#292E45' }}
+                  value={tempLng} 
+                  onChange={(e) => setTempLng(e.target.value)} 
+                  required
+                />
+              </div>
+              <div className="d-flex justify-content-end gap-2 mt-4">
+                <button type="button" className="btn btn-link text-white text-decoration-none" onClick={() => setIsLocationModalOpen(false)}>Cancel</button>
+                <button type="submit" className="btn btn-light fw-bold px-3" style={{ borderRadius: '20px' }}>Update</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }

@@ -14,8 +14,9 @@ const POPULAR_CATEGORIES = [
 ];
 
 function HomePage() {
-  // State to store raw restaurant array fetched from the backend server
-  const [restaurants, setRestaurants] = useState([]);
+  // State to hold the fetched restaurant data from the backend
+  const [nearYouRestaurants, setNearYouRestaurants] = useState([]);
+  const [topRatedRestaurants, setTopRatedRestaurants] = useState([]);
   
   // Loading flag to show text/spinner until backend request resolves
   const [loading, setLoading] = useState(true);
@@ -25,36 +26,72 @@ function HomePage() {
 
   // Side-effect hook to fetch main dashboard feed data once on component mount
   useEffect(() => {
-    const fetchRestaurants = async () => {
+    const fetchNearYou = async () => {
       try {
-        // Retrieve JWT token stored during user login/auth stage
-        const token = localStorage.getItem('userToken');
+        const savedLocation = localStorage.getItem('userLocation');
+        let urlNear = '';
+        // If the user has a saved location, we fetch nearby restaurants using their coordinates. Otherwise, we fetch all restaurants without sorting.
+        if (savedLocation) {
+          const { lat, lng } = JSON.parse(savedLocation);
+          urlNear = `http://localhost:3000/api/restaurants?sort=nearby&lat=${lat}&lng=${lng}`;
+        } else {
+          urlNear = `http://localhost:3000/api/restaurants`;
+        }
         
-        const response = await fetch('http://localhost:3000/api/restaurants', {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`, // Pass credentials securely
-            'Content-Type': 'application/json'
-          }
+        const resNear = await fetch(urlNear, { 
+          method: 'GET', 
+          headers: { 'Content-Type': 'application/json' } 
         });
+
+        const dataNear = await resNear.json();
         
-        const data = await response.json();
-        setRestaurants(data);
-        setLoading(false);    
+        setNearYouRestaurants(dataNear);
       } catch (error) {
-        console.error("Failed to fetch restaurants, loading fallback data:", error);
-        
-        // DEV FALLBACK MOCK DATA: Used for manual frontend testing when the backend server is offline
+        console.error("Failed to fetch near you restaurants, using fallback:", error);
         const fallbackMock = [
-          { id: 1, name: "Pizza Papa John's", description: "American Pizza", rating: "7.8", distance: "1.2", image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500" },
-          { id: 2, name: "Burger Station", description: "Premium Burgers", rating: "8.5", distance: "2.4", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500" }
+          { id: 1, name: "Pizza Papa John's", description: "American Pizza", rating: "7.8", distance: "1.2", image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500" }
         ];
-        setRestaurants(fallbackMock);
-        setLoading(false);
+        setNearYouRestaurants(fallbackMock);
+      }
+    };
+    const fetchTopRated = async () => {
+      try {
+        const savedLocation = localStorage.getItem('userLocation');
+        let urlTopRated = `http://localhost:3000/api/restaurants?sort=topRated`;
+        
+        if (savedLocation) {
+          const { lat, lng } = JSON.parse(savedLocation);
+          urlTopRated += `&lat=${lat}&lng=${lng}`;
+        }
+
+        const resTopRated = await fetch(urlTopRated, { method: 'GET' });
+        const dataTopRated = await resTopRated.json();
+        setTopRatedRestaurants(dataTopRated);
+      } catch (error) {
+        console.error(error);
       }
     };
 
-    fetchRestaurants();
+    // Initialize the homepage by fetching both "near you" and "top rated" restaurant data, and manage the loading state accordingly.
+    const initHomePage = async () => {
+      
+      setLoading(true);
+      await Promise.all([fetchNearYou(), fetchTopRated()]);
+      setLoading(false);
+    };
+    
+    initHomePage();
+
+    // Event listener to handle location changes and refetch nearby restaurants when the user's location is updated.
+    const handleLocationChange = async () => {
+      await fetchNearYou();
+    };
+
+    window.addEventListener('locationChanged', handleLocationChange);
+  
+    return () => {
+      window.removeEventListener('locationChanged', handleLocationChange);
+    };
   }, []);
 
   // Callback wrapper passing selected category names to the dynamic filtering page
@@ -64,22 +101,8 @@ function HomePage() {
     }
   };
 
-  // Maps all un-sorted raw restaurant entries into a standard card array
-  const restaurantItems = restaurants.map((restaurant, index) => (
-    <RestaurantCard key={index} {...restaurant} />
-  ));
-
-  // Client-side computation: Sorts items descending by rating and extracts top 5 entries
-  const topRatedItems = [...restaurants]
-    .sort((a, b) => parseFloat(b.rating || 0) - parseFloat(a.rating || 0))
-    .slice(0, 5) 
-    .map((restaurant, index) => (
-      <RestaurantCard key={`top-${index}`} {...restaurant} />
-    ));
-
   return (
     <>
-      {/* Note: Global Navbar removed from here since it is now injected via MainLayout */}
       <div className="container mt-5 pt-5">
         
         {/* Categories navigation track */}
@@ -94,26 +117,25 @@ function HomePage() {
           <div className="d-flex flex-column gap-5 mt-4">
             
             {/* --- NEAR YOU SECTION: Sorted ascending by geolocation distance (Max 8 entries) --- */}
-            <RestaurantCarousel 
-              title="Dinner near you"
-              onSeeAllClick={() => navigate('/see-all/near-you')}
-            >
-              {[...restaurants]
-                .sort((a, b) => Number(a.distance || 0) - Number(b.distance || 0))
-                .slice(0, 8) 
-                .map((restaurant) => (
-                  <RestaurantCard key={`near-${restaurant.id}`} {...restaurant} />
-                ))
-              }
+            {nearYouRestaurants.length > 0 && (
+              <RestaurantCarousel 
+                title="Dinner near you"
+                onSeeAllClick={() => navigate('/see-all/near-you')}
+              >
+                {nearYouRestaurants.map((restaurant) => (
+                <RestaurantCard key={`near-${restaurant.id}`} {...restaurant} />
+              ))}
             </RestaurantCarousel>
-
+            )}
             {/* --- TOP RATED SECTION: Rendered dynamically only if populated records exist --- */}
-            {topRatedItems.length > 0 && (
+            {topRatedRestaurants.length > 0 && (
               <RestaurantCarousel 
                 title="Top Rated Restaurants ⭐"  
                 onSeeAllClick={() => navigate('/see-all/top-rated')}
               >
-                {topRatedItems}
+                {topRatedRestaurants.map((restaurant) => (
+                  <RestaurantCard key={`top-${restaurant.id}`} {...restaurant} />
+                ))}
               </RestaurantCarousel>
             )}
             

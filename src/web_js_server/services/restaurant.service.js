@@ -20,8 +20,8 @@ class RestaurantService {
             return false;
         }
 
-        const requiredFields = ['name', 'address', 'phone', 'kosher', 'working_hours'];
-        const optionalFields = ['description'];
+        const requiredFields = ['name', 'address', 'phone', 'kosher', 'working_hours', 'lat','lng'];
+        const optionalFields = ['description','categories', 'image'];
         const allowedFields = [...requiredFields, ...optionalFields];
 
         if (!isUpdate) {
@@ -44,6 +44,10 @@ class RestaurantService {
                     if (typeof data[field] !== 'string' || data[field].trim() === '') {
                         return false;
                     }
+                } else if (['lat', 'lng'].includes(field)) {
+                    if (typeof data[field] !== 'number') {
+                        return false;
+                    }
                 }
             }
         } else {
@@ -64,6 +68,10 @@ class RestaurantService {
                     }
                 } else if (field === 'working_hours') {
                     if (typeof data[field] !== 'string' && typeof data[field] !== 'object') {
+                        return false;
+                    }
+                } else if (['lat', 'lng'].includes(field)) {
+                    if (typeof data[field] !== 'number') {
                         return false;
                     }
                 } else if (['name', 'address', 'phone', 'description'].includes(field)) {
@@ -89,7 +97,7 @@ class RestaurantService {
     createRestaurant(restaurantData) {
         // Validate restaurant data before creation
         if (!this._validateRestaurantData(restaurantData, false)) {
-            throw new Error('Invalid restaurant data: name, address, phone, kosher, and working_hours are required');
+            throw new Error('Invalid restaurant data: name, address, phone, kosher, working_hours, lat, and lng are required');
         }
 
         // Generate a unique UUID for the new restaurant
@@ -109,7 +117,7 @@ class RestaurantService {
     getRestaurantById(id) {
 		return restaurantModel.getRestaurantById(id);
 	}
-    
+
     /**
      * Updates an existing restaurant with validation.
      * @param {string} id - The restaurant ID to update.
@@ -132,7 +140,7 @@ class RestaurantService {
         const mergedRestaurant = { ...resForUpdate };
 
         // Define a strict whitelist of fields the user is allowed to modify
-        const allowedUpdates = ['name', 'description', 'address', 'phone', 'kosher', 'working_hours'];
+        const allowedUpdates = ['name', 'description', 'address', 'phone', 'kosher', 'working_hours', 'categories', 'image', 'lat', 'lng'];
 
         // Iterate and apply only the permitted and provided fields
         allowedUpdates.forEach(field => {

@@ -26,9 +26,10 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/search/:query" element={<SearchPage />} />
             <Route path="/see-all/:type" element={<SeeAllPage />} />
+            <Route path="/category/:category" element={<SeeAllPage />} />
           </Route>
 
-          <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
 
         </Routes>
       </Router> 
